@@ -1,0 +1,9 @@
+numpy
+matplotlib
+scipy
+gpflow
+tensorflow
+ipywidgets
+ipython
+networkx
+plotly
