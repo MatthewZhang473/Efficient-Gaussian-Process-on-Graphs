@@ -11,11 +11,11 @@ def get_normalized_laplacian(W):
     ndarray: Normalized Laplacian matrix of shape (n, n).
     """
     degrees = np.sum(W, axis=1)
-    # Handle zero degrees by setting to infinity to avoid division by zero
-    with np.errstate(divide='ignore', invalid='ignore'):
-        D_inv_sqrt = np.diag(1.0 / np.sqrt(degrees, where=(degrees > 0)))
+    D_inv_sqrt = np.zeros_like(W, dtype=float)
+    valid_degrees = degrees > 0
+    D_inv_sqrt[valid_degrees, valid_degrees] = 1.0 / np.sqrt(degrees[valid_degrees])
     L = np.eye(W.shape[0]) - D_inv_sqrt @ W @ D_inv_sqrt
-    return np.nan_to_num(L)
+    return L
 
 def generate_noisy_samples(K, noise_std=0.1):
     """
