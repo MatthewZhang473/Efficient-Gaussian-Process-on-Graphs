@@ -3,7 +3,7 @@ from .utils import get_normalized_laplacian
 import numpy as np
 
 
-def diffusion_kernel(adj_matrix, beta):
+def diffusion_kernel(adj_matrix, beta=2):
     """
     Compute the diffusion kernel matrix for a graph.
     """
