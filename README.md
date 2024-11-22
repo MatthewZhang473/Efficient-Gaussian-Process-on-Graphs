@@ -10,6 +10,7 @@ The project aims to harness the General Graph Random Features (g-GRF) algorithm 
 
 - **`experiments/`**: Includes Jupyter notebooks demonstrating use cases and experiments with the implemented methods.
 - **`efficient_graph_gp/`**: Core module implementing the graph GP inference system and the g-GRF algorithm.
+- **`presentations/`**: My presentation on project motivation and explain the GRF algorithm.
 
 ## Research Objectives
 
