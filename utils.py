@@ -22,7 +22,7 @@ def plot_gp_fit(X, Y, X_new, mean, stddev, beta_sample, ax):
                     (mean - 2 * stddev).numpy().flatten(),
                     (mean + 2 * stddev).numpy().flatten(),
                     color='lightblue', alpha=0.5, label='95% Confidence Interval')
-    ax.set_title(f'Gaussian Process Fit with Graph Diffusion Kernel (beta={beta_sample})')
+    ax.set_title(f'Gaussian Process Fit (beta={beta_sample})')
     ax.set_xlabel('Node Number')
     ax.set_ylabel('Sampled Value')
     ax.grid()
