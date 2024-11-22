@@ -1,8 +1,10 @@
 from .diffusion_kernel import diffusion_kernel
+from .feature_matrix_kernel import feature_matrix_kernel
 from .utils import get_normalized_laplacian, generate_noisy_samples
 
 __all__ = [
             "get_normalized_laplacian",
             "generate_noisy_samples",
-            "diffusion_kernel"
+            "diffusion_kernel",
+            "feature_matrix_kernel"
           ]
