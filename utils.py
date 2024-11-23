@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 
 # Function to plot the network graph in Matplotlib
 def plot_network_graph(adjacency_matrix, ax):
@@ -27,3 +28,11 @@ def plot_gp_fit(X, Y, X_new, mean, stddev, beta_sample, ax):
     ax.set_ylabel('Sampled Value')
     ax.grid()
     ax.legend()
+    
+def compute_fro(first_matrix, second_matrix, relative=True):
+    "Calculates the Frobenius norm"
+    diff_norm = np.linalg.norm(first_matrix - second_matrix)
+    if not relative:
+        return diff_norm * diff_norm
+    else:
+        return diff_norm / np.linalg.norm(first_matrix)
