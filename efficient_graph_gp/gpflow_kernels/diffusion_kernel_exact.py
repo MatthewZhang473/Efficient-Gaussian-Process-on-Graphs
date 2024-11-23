@@ -23,13 +23,16 @@ class GraphDiffusionKernel(gpflow.kernels.Kernel):
         return tf.gather(tf.linalg.diag_part(kernel_matrix), indices_X)
 
     def diffusion_kernel(self, adj_matrix, beta):
+        normalized_laplacian = self.get_normalized_laplacian(adj_matrix)
+        return tf.linalg.expm(-beta * normalized_laplacian)
+    
+    @staticmethod
+    def get_normalized_laplacian(adj_matrix):
         degrees = tf.reduce_sum(adj_matrix, axis=1)
         safe_degrees = tf.where(degrees > 0, degrees, tf.constant(float('inf'), dtype=adj_matrix.dtype))
-        # Compute D^(-1/2)
         D_inv_sqrt = tf.linalg.diag(1.0 / tf.sqrt(safe_degrees))
         I = tf.eye(tf.shape(adj_matrix)[0], dtype=adj_matrix.dtype)
-        normalized_laplacian = I - tf.matmul(tf.matmul(D_inv_sqrt, adj_matrix), D_inv_sqrt)
-        return tf.linalg.expm(-beta * normalized_laplacian)
+        return I - tf.matmul(tf.matmul(D_inv_sqrt, adj_matrix), D_inv_sqrt)
     
   
 if __name__ == "__main__":
