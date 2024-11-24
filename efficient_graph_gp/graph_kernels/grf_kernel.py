@@ -16,10 +16,11 @@ class Graph:
 
     def get_edge_weight(self, node1, node2):
         return self.graph.edges[node1, node2].get('weight', 1.0) if self.graph.has_edge(node1, node2) else 0.0
-
 class RandomWalk:
-    def __init__(self, graph: Graph):
+    def __init__(self, graph: Graph, seed=None):
         self.graph = graph
+        if seed is not None:
+            np.random.seed(seed)  # Set the random seed for reproducibility
 
     def _perform_walk(self, start_node, max_steps, modulation_function=None, p_halt=0.1):
         current_node = start_node
@@ -53,11 +54,12 @@ class RandomWalk:
         return feature_vector / num_walks
 
 class GeneralGraphRandomFeatures:
-    def __init__(self, graph: Graph, modulation_function=None, max_walk_length=10):
+    def __init__(self, graph: Graph, modulation_function=None, max_walk_length=10, beta=1.0, seed=None):
         self.graph = graph
-        self.random_walk = RandomWalk(graph)
+        self.random_walk = RandomWalk(graph, seed=seed)  # Pass seed to RandomWalk
         self.modulation_function = modulation_function
         self.max_walk_length = max_walk_length
+        self.beta = beta
 
     def generate_features(self, num_walks=50, p_halt=0.1):
         num_nodes = self.graph.get_num_nodes()
@@ -68,24 +70,23 @@ class GeneralGraphRandomFeatures:
                 start_node=node,
                 num_walks=num_walks,
                 max_steps=self.max_walk_length,
-                modulation_function=self.modulation_function,
+                modulation_function=lambda length: self.modulation_function(length, self.beta),
                 p_halt=p_halt
             )
 
         return feature_matrix
 
-    def estimate_kernel(self, num_walks=50, p_halt=0.1):
-        feature_matrix = self.generate_features(num_walks, p_halt)
-        return feature_matrix @ feature_matrix.T
-
-
-
-def grf_kernel(adj_matrix, walks_per_node = 50, p_halt = 0.1, modulation_function=None): 
+def grf_kernel(adj_matrix, walks_per_node=50, p_halt=0.1, modulation_function=None, beta=1.0): 
     """
     Construct graph random features on the normalized graph Laplacian.
     """
 
     laplacian = get_normalized_laplacian(adj_matrix)
-    grf = GeneralGraphRandomFeatures(Graph(laplacian), modulation_function)
-    return grf.estimate_kernel(num_walks=walks_per_node, p_halt=p_halt)
-    
+    # Use two independent GRFs to avoid biased estimation
+    grf_1 = GeneralGraphRandomFeatures(Graph(laplacian), modulation_function, beta=beta, seed=42)  # Hard-coded seed 1
+    grf_2 = GeneralGraphRandomFeatures(Graph(laplacian), modulation_function, beta=beta, seed=84)  # Hard-coded seed 2
+    feature_matrix_1 = grf_1.generate_features(num_walks=walks_per_node, p_halt=p_halt)
+    feature_matrix_2 = grf_2.generate_features(num_walks=walks_per_node, p_halt=p_halt)
+
+    # Return their product
+    return feature_matrix_1 @ feature_matrix_2.T
