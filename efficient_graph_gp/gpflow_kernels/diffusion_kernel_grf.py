@@ -90,7 +90,7 @@ class RandomWalk:
         current_node, walk_length, load, feature_vector, proceed = tf.while_loop(
             condition,
             body,
-            [current_node, walk_length, load, feature_vector, proceed],
+            (current_node, walk_length, load, feature_vector, proceed),
             maximum_iterations=max_iterations
         )
 
@@ -110,7 +110,7 @@ class RandomWalk:
         _, feature_vector = tf.while_loop(
             lambda i, fv: i < num_walks,
             body,
-            [tf.constant(0), feature_vector]
+            (tf.constant(0), feature_vector)
         )
 
         return feature_vector / tf.cast(num_walks, tf.float64)
@@ -147,7 +147,7 @@ class GeneralGraphRandomFeatures:
         _, feature_matrix = tf.while_loop(
             lambda node, _: node < num_nodes,
             body,
-            [tf.constant(0), feature_matrix]
+            (tf.constant(0), feature_matrix)
         )
 
         feature_matrix = feature_matrix.stack()
@@ -204,25 +204,16 @@ class GraphDiffusionGRFKernel(gpflow.kernels.Kernel):
         # Ensure beta is of type tf.float64
         beta = tf.cast(beta, tf.float64)
         
-        grf_1 = GeneralGraphRandomFeatures(
+        grf = GeneralGraphRandomFeatures(
             graph,
             modulation_function=diffusion_modulation_function,
             max_walk_length=self.max_walk_length,
             beta=beta,
-            seed=42,
-        )
-        grf_2 = GeneralGraphRandomFeatures(
-            graph,
-            modulation_function=diffusion_modulation_function,
-            max_walk_length=self.max_walk_length,
-            beta=beta,
-            seed=84,
+            seed=42
         )
 
         # Generate feature matrices
-        feature_matrix_1 = grf_1.generate_features(num_walks=self.walks_per_node, p_halt=self.p_halt)
-        feature_matrix_2 = grf_2.generate_features(num_walks=self.walks_per_node, p_halt=self.p_halt)
-
+        feature_matrix = grf.generate_features(num_walks=self.walks_per_node, p_halt=self.p_halt)
         # Return kernel matrix
-        return tf.matmul(feature_matrix_1, tf.transpose(feature_matrix_2))
+        return tf.matmul(feature_matrix, tf.transpose(feature_matrix))
 
