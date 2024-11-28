@@ -1,7 +1,9 @@
 import tensorflow as tf
 
-@tf.function
-def diffusion_modulator_tf(length, beta):
+def diffusion_modulator_tf(length: tf.Tensor, beta: tf.Tensor) -> tf.Tensor:
+    length = tf.cast(length, tf.float64)
+    beta = tf.cast(beta, tf.float64)
+    two = tf.constant(2.0, dtype=tf.float64)
     numerator = tf.pow(-beta, length)
-    denominator = tf.pow(2.0, tf.cast(length, tf.float32)) * tf.math.gamma(tf.cast(length + 1, tf.float32))
+    denominator = tf.pow(two, length) * tf.exp(tf.math.lgamma(length + 1.0))
     return numerator / denominator
