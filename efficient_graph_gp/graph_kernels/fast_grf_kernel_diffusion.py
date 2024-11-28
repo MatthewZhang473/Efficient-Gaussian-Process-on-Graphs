@@ -20,7 +20,4 @@ def fast_diffusion_grf_kernel(adj_matrix, walks_per_node=50, p_halt=0.1, max_wal
     for node in range(num_nodes):
         Phi[node, :] = feature_matrices[node] @ modulator_vector
     
-    return Phi
-        
-    
-    
+    return Phi @ Phi.T
