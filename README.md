@@ -8,9 +8,25 @@ The project aims to harness the General Graph Random Features (g-GRF) algorithm 
 
 ## Repository Structure
 
-- **`experiments/`**: Includes Jupyter notebooks demonstrating use cases and experiments with the implemented methods.
-- **`efficient_graph_gp/`**: Core module implementing the graph GP inference system and the g-GRF algorithm.
-- **`presentations/`**: My presentation on project motivation and explain the GRF algorithm.
+### **`experiments/`**
+Contains Jupyter notebooks that demonstrate the use cases, experiments, and performance evaluations of the implemented methods.
+
+- **`convergence_tests/`**: 
+  - Demonstrates the convergence of different methods used to approximate covariance matrices compared to the ground truth covariance matrices.
+
+- **`gp_inference_tests/`**: 
+  - Showcases Gaussian Process (GP) inference on synthetic data using various approximated covariance matrices.
+
+- **`kernel_lazy_update/`**: 
+  - Illustrates a lazy update algorithm designed for efficiently updating the graph covariance matrix when introducing a new node.
+
+### **`efficient_graph_gp/`**
+Core module implementing the Graph Gaussian Process (GP) inference system, including the g-GRF algorithm.
+
+### **`presentations/`**
+Slides and other materials that explain:
+- The project motivation.
+- A detailed overview of the Gaussian Random Field (GRF) algorithm.
 
 ## Research Objectives
 
