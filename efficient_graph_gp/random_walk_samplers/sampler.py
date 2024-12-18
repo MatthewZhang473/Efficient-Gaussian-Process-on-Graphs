@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 
 class Graph:
     def __init__(self, adjacency_matrix=None):
@@ -50,8 +51,8 @@ class RandomWalk:
         for _ in range(num_walks):
             cumulative_matrix += self._perform_single_walk(start_node, p_halt, max_walk_length)
         return cumulative_matrix / num_walks
-    
-    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length):
+
+    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False):
         """
         Perform multiple random walks for each node in the graph as a starting point.
         Returns a NumPy array of shape (num_nodes, num_nodes, max_walk_length).
@@ -59,12 +60,12 @@ class RandomWalk:
         num_nodes = self.graph.get_num_nodes()
         # Preallocate a 3D NumPy array to store feature matrices for each start node
         feature_matrices = np.zeros((num_nodes, num_nodes, max_walk_length), dtype=float)
-        
-        for start_node in range(num_nodes):
+    
+        iterator = tqdm(range(num_nodes), desc="Random walks", disable=not use_tqdm)
+        for start_node in iterator:
             feature_matrix = self._perform_multiple_walks(start_node, num_walks, p_halt, max_walk_length)
             feature_matrices[start_node] = feature_matrix
         return feature_matrices
-
 
 if __name__ == "__main__":
     # Define the adjacency matrix

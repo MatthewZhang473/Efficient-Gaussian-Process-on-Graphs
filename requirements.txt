@@ -7,3 +7,4 @@ ipywidgets
 ipython
 networkx
 plotly
+tqdm
