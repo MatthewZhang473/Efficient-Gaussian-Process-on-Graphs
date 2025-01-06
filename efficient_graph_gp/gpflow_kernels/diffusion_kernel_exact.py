@@ -4,10 +4,13 @@ import numpy as np
 
 
 class GraphDiffusionKernel(gpflow.kernels.Kernel):
-    def __init__(self, adjacency_matrix, **kwargs):
+    def __init__(self, adjacency_matrix, beta = None, **kwargs):
         super().__init__(**kwargs)
         self.adjacency_matrix = tf.convert_to_tensor(adjacency_matrix, dtype=tf.float64)
-        self.beta = gpflow.Parameter(2.0, transform=gpflow.utilities.positive())  # Learnable hyperparameter
+        if beta:
+            self.beta = gpflow.Parameter(beta, transform=gpflow.utilities.positive())
+        else:
+            self.beta = gpflow.Parameter(2.0, transform=gpflow.utilities.positive())  # Learnable hyperparameter
 
     def K(self, X1, X2=None):
         if X2 is None:
