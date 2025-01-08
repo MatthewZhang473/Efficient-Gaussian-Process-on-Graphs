@@ -13,6 +13,7 @@ class GraphDiffusionFastGRFKernel(gpflow.kernels.Kernel):
         p_halt: float = 0.1,
         max_walk_length: int = 10,
         beta: float = 1.0, # this is the learnable parameter
+        random_walk_seed: int = 42,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -27,7 +28,7 @@ class GraphDiffusionFastGRFKernel(gpflow.kernels.Kernel):
         # Precompute random walk feature matrices
         self.laplacian = get_normalized_laplacian(adjacency_matrix)
         graph = Graph(self.laplacian)
-        random_walk = RandomWalk(graph, seed=42)
+        random_walk = RandomWalk(graph, seed=random_walk_seed)
         self.feature_matrices_tf = tf.constant(
             random_walk.get_random_walk_matrices(walks_per_node, p_halt, max_walk_length), dtype=tf.float64
         )
