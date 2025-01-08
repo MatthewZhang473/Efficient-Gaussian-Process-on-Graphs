@@ -1,5 +1,7 @@
 # Error Analysis in Graph GP Inference
 
+LLN - Law of Large Numbers
+
 ## The Question
 
 Our toy model to validate our GP inference is to fit a noisy dataset sampled from a known GP. 
