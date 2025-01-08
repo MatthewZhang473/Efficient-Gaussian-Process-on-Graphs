@@ -14,11 +14,19 @@ Contains Jupyter notebooks that demonstrate the use cases, experiments, and perf
 - **`convergence_tests/`**: 
   - Demonstrates the convergence of different methods used to approximate covariance matrices compared to the ground truth covariance matrices.
 
+  - We also showed that the error in GRF approximation does not increase as the graph size increases.
+
 - **`gp_inference_tests/`**: 
   - Showcases Gaussian Process (GP) inference on synthetic data using various approximated covariance matrices.
 
 - **`kernel_lazy_update/`**: 
   - Illustrates a lazy update algorithm designed for efficiently updating the graph covariance matrix when introducing a new node.
+
+- **`error_analysis_in_gp_inference`**:
+  - We illustrated the convergence of GP inference for the toy example, where the maximum likelihood inference of the hyperparameters converges to the ground truth hyperparameter (which we sued to sample the data) as we increase the number of node use in the graph.
+
+  - **`grf_performance_bounds`**:
+    - Further experiments to show how the GRF method is getting converging and consistent result compared to exact kernel in the GP inference context.
 
 ### **`efficient_graph_gp/`**
 Core module implementing the Graph Gaussian Process (GP) inference system, including the g-GRF algorithm.
