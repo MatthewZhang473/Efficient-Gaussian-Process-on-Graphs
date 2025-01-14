@@ -81,4 +81,35 @@ Shall we manually add some converging condition? Alternatively, we can give the 
 1. clamp the noise
 2. test /train data
 3. scale the graph - normalizing the 
-4. 
+
+
+
+# Thinking
+
+What have we found so far:
+
+The PoFM method is getting close log marginal likelihood compared to the true model - but it is not guaranteed to have better data fit but worse complexity.
+
+We also observed that lots of time it is getting a kernel matrix that is having every different modulator compared to the exact diffusion kernel - but using FRO might be better.
+
+Also we know that, as we increase the number of nodes - the true distribution - of exact diffusion kernel should be much more likely - so increasing graph size might have been a good idea.
+
+So why don't we do a plot:
+
+variables:
+- graph size: 20, 40, 80, 160, 320 (avg degree 10)
+- approximation degree of the PoFM (try out 5 different random seeds) [1, 2, 3, ... 10]
+- plot FRO, data fit term, complexity term
+
+But equally I am very interested in the graph scaling - only if we scale the normalized laplacian even further
+
+# Visualization Experiments Conclusions
+
+1. Similar Level of Log Likelihood is Produced  Between the Exact Diffusion Kernel and the PoFM
+2. The larger the graph size, the smaller the FRO
+3. FRO is smaller for smaller approximation degree
+4. FRO is smaller for smaller beta
+5. PoFM is terrible for degree > 8 - model becomes very complex
+
+The next thing to do is to do **the masking**
+
