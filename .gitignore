@@ -1,2 +1,9 @@
 venv
+*.txt
+*.pyc
+*.pkl
+*.csv
+pems-bay.h5
+PKG-INFO
+.ipynb_checkpoints/
 __pycache__
