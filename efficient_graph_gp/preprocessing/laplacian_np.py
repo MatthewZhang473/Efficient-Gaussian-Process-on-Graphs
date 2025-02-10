@@ -18,3 +18,18 @@ def get_normalized_laplacian(W):
     # Compute normalized Laplacian
     L = np.eye(W.shape[0]) - D_inv_sqrt @ W @ D_inv_sqrt
     return L
+
+def get_laplacian(W):
+    """
+    Compute the Laplacian matrix for a graph.
+
+    Parameters:
+    W (ndarray): Symmetric adjacency matrix of shape (n, n).
+
+    Returns:
+    ndarray: Laplacian matrix of shape (n, n).
+    """
+    degrees = np.sum(W, axis=1)
+    D = np.diag(degrees)
+    L = D - W
+    return L

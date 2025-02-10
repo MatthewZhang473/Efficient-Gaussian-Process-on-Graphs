@@ -2,7 +2,7 @@ import gpflow
 import numpy as np
 import tensorflow as tf
 from ..random_walk_samplers import Graph
-from ..preprocessing import get_normalized_laplacian
+from ..preprocessing import get_normalized_laplacian, get_laplacian
 
 def compute_pstep_walk_matrix(adj_matrix, p_max):
     """
@@ -48,6 +48,7 @@ class GraphGeneralPoFMKernel(gpflow.kernels.Kernel):
         adjacency_matrix: np.ndarray,
         max_walk_length: int = 10,
         modulator_vector: np.ndarray = None,
+        normalize_laplacian: bool = True,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -68,7 +69,7 @@ class GraphGeneralPoFMKernel(gpflow.kernels.Kernel):
                 self.modulator_vector =  gpflow.Parameter(tf.cast(modulator_vector, tf.float64))
         
         # Precompute feature matrices
-        self.laplacian = get_normalized_laplacian(adjacency_matrix) # TODO: Bound the eigenvalues
+        self.laplacian = get_normalized_laplacian(self.adjacency_matrix) if normalize_laplacian else get_laplacian(self.adjacency_matrix)
         p_step_walk_matrix = compute_pstep_walk_matrix(self.laplacian, self.max_walk_length)
         self.feature_matrices_tf = tf.constant(
             p_step_walk_matrix, dtype=tf.float64
