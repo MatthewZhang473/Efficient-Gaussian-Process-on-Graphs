@@ -36,9 +36,9 @@ class RandomWalk:
             walk_matrix[current_node, step] = load
             neighbors = self.graph.get_neighbors(current_node)
             degree = neighbors.size
-            if degree == 0 or self.rng.random() < p_halt:
+            if degree == 0 or np.random.random() < p_halt:
                 break
-            new_node = self.rng.choice(neighbors)
+            new_node = np.random.choice(neighbors)
             weight = self.graph.get_edge_weight(current_node, new_node)
             load *= degree * weight / (1 - p_halt)
             current_node = new_node
