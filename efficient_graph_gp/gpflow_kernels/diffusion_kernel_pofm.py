@@ -5,10 +5,10 @@ import numpy as np
 from ..preprocessing import get_normalized_laplacian, get_laplacian
 
 class GraphDiffusionPoFMKernel(gpflow.kernels.Kernel):
-    def __init__(self, adjacency_matrix, max_expansion=5, sigma_f=1.0, normalize_laplacian=True, **kwargs):
+    def __init__(self, adjacency_matrix, beta = 2.0, max_expansion=5, sigma_f=1.0, normalize_laplacian=True, **kwargs):
         super().__init__(**kwargs)
         self.adjacency_matrix = tf.convert_to_tensor(adjacency_matrix, dtype=tf.float64)
-        self.beta = gpflow.Parameter(2.0, transform=gpflow.utilities.positive())  # Learnable hyperparameter
+        self.beta = gpflow.Parameter(beta, transform=gpflow.utilities.positive())  # Learnable hyperparameter
         self.max_expansion = max_expansion  # Maximum expansion for series approximation
         self.sigma_f = gpflow.Parameter(sigma_f, transform=gpflow.utilities.positive())  # Learnable hyperparameter
         self.normalize_laplacian = normalize_laplacian
