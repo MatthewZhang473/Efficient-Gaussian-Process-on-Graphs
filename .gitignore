@@ -3,6 +3,7 @@ venv
 *.pyc
 *.pkl
 *.csv
+.DS_Store
 pems-bay.h5
 PKG-INFO
 .ipynb_checkpoints/
