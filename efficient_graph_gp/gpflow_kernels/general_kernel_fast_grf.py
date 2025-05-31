@@ -43,7 +43,7 @@ class GraphGeneralFastGRFKernel(gpflow.kernels.Kernel):
         graph = Graph(self.laplacian)
         random_walk = RandomWalk(graph, seed=random_walk_seed)
         self.feature_matrices_tf = tf.constant(
-            random_walk.get_random_walk_matrices(walks_per_node, p_halt, max_walk_length), dtype=tf.float64
+            random_walk.get_random_walk_matrices(walks_per_node, p_halt, max_walk_length, use_tqdm=True), dtype=tf.float64
         )
 
     def K(self, X1: tf.Tensor, X2: tf.Tensor = None) -> tf.Tensor:
