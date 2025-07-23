@@ -16,28 +16,29 @@ def fast_general_grf_kernel(adj_matrix, modulator_vector, walks_per_node=50, p_h
     
     Args:
     - adj_matrix: Sparse adjacency matrix of the graph.
-    - modulator_vector: Dense vector modulating the random walk features.
+    - modulator_vector: Dense vector modulating the random walk features (length = max_walk_length).
     - walks_per_node: Number of random walks per node.
     - p_halt: Probability of halting the random walk.
     - max_walk_length: Maximum length of the random walks.
     
     Returns:
-    - Phi: Kernel matrix of shape (num_nodes, num_nodes).
+    - Sparse kernel matrix of shape (num_nodes, num_nodes).
     """
     import scipy.sparse as sp
     
     laplacian = get_normalized_laplacian(adj_matrix)
     random_walk = SparseRandomWalk(laplacian, seed=None)
-    feature_matrices = random_walk.get_random_walk_matrices(walks_per_node, p_halt, max_walk_length)
+    step_matrices = random_walk.get_random_walk_matrices(walks_per_node, p_halt, max_walk_length)
     
-    # Stack phi vectors for each node (convert to proper sparse format)
-    num_nodes = len(feature_matrices)
-    phi_rows = []
-    for i in range(num_nodes):
-        phi_vector = feature_matrices[i] @ modulator_vector
-        phi_rows.append(sp.csr_matrix(phi_vector).reshape(1, -1))
+    # Compute Phi = sum(f_p * M_p) where f_p are modulator weights
+    num_nodes = adj_matrix.shape[0]
+    Phi = sp.csr_matrix((num_nodes, num_nodes))
     
-    Phi = sp.vstack(phi_rows)
+    for step, f_p in enumerate(modulator_vector):
+        if step < len(step_matrices):
+            Phi += f_p * step_matrices[step]
+    
+    # Keep kernel matrix sparse: K = Phi @ Phi.T
     return Phi @ Phi.T
 
 
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     
     # Random modulator vector
     np.random.seed(42)
-    modulator_vector = np.random.randn(3)  # 5 steps
+    modulator_vector = np.random.randn(3)  # 3 steps to match max_walk_length
     
     # Test the function
     print("Testing fast_general_grf_kernel...")
@@ -77,10 +78,6 @@ if __name__ == "__main__":
     )
     
     print(f"Kernel matrix shape: {kernel_matrix.shape}")
-    print(f"Kernel matrix sparsity: {kernel_matrix.nnz / (kernel_matrix.shape[0] * kernel_matrix.shape[1]):.4f}")
-    print(f"Sample of kernel matrix (first 5x5):\n{kernel_matrix[:10, :10].toarray()}")
-    try:
-        print("Positive definite:", np.all(np.linalg.eigvals(kernel_matrix.toarray()) >= -1e-10))
-    except:
-        print("Could not check positive definiteness (matrix too large)")
+    print(f"Kernel matrix sparsity: {kernel_matrix.nnz / n_nodes**2:.4f}")
+    print(f"Sample of kernel matrix (first 10x10):\n{kernel_matrix[:10, :10].toarray()}")
 
