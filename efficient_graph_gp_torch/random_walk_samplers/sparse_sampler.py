@@ -96,4 +96,4 @@ if __name__ == "__main__":
     print("Example step matrix (t=1):")
     print(step_matrices[3].todense())
     print(f"Shape: {step_matrices[0].shape}")
-    print(f"Sparsity: {sum(m.nnz for m in step_matrices) / sum(m.size for m in step_matrices):.3f}")
+    print(f"Sparsity: {sum(m.nnz for m in step_matrices) / sum(m.shape[0]**2 for m in step_matrices):.3f}")
