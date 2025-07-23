@@ -37,13 +37,13 @@ def compare_outputs(dense_result, sparse_result, tolerance=1e-10):
         return False, "One of the results is None"
     
     # Convert sparse result to dense format for comparison
-    if isinstance(sparse_result, list):
-        # Sparse returns list of CSR matrices
-        n_nodes = len(sparse_result)
-        max_walk_length = sparse_result[0].shape[1]
+    if isinstance(sparse_result, list) and hasattr(sparse_result[0], 'toarray'):
+        # New sparse format: list of step matrices (num_nodes x num_nodes each)
+        max_walk_length = len(sparse_result)
+        n_nodes = sparse_result[0].shape[0]
         sparse_dense = np.zeros((n_nodes, n_nodes, max_walk_length))
-        for i, matrix in enumerate(sparse_result):
-            sparse_dense[i] = matrix.toarray()
+        for step, matrix in enumerate(sparse_result):
+            sparse_dense[:, :, step] = matrix.toarray()
     else:
         sparse_dense = sparse_result
     
@@ -128,7 +128,10 @@ def main():
     
     # Test parameters
     test_configs = [
+        {'n_nodes': 3, 'avg_degree': 1, 'num_walks': 1000, 'max_walk_length': 4},
+        {'n_nodes': 10, 'avg_degree': 2, 'num_walks': 1000, 'max_walk_length': 4},
         {'n_nodes': 100, 'avg_degree': 10, 'num_walks': 100, 'max_walk_length': 4},
+        {'n_nodes': 1000, 'avg_degree': 10, 'num_walks': 50, 'max_walk_length': 4},
     ]
     
     p_halt = 0.1
@@ -168,14 +171,16 @@ def main():
             timing_results['sparse_result']
         )
         
-        # Debug output - remove these lines after testing
-        if timing_results['dense_result'] is not None:
-            print("Dense result shape:", timing_results['dense_result'].shape)
-            print("Dense sample:\n", timing_results['dense_result'][0])
-        
-        if timing_results['sparse_result'] is not None:
-            print("Sparse result length:", len(timing_results['sparse_result']))
-            print("Sparse sample:\n", timing_results['sparse_result'][0].todense())
+        # Debug output - show formats only for small graphs
+        if config['n_nodes'] <= 10:
+            if timing_results['dense_result'] is not None:
+                print("Dense result shape:", timing_results['dense_result'].shape)
+                print("Dense sample (first matrix slice):\n", timing_results['dense_result'][:, :, 1])
+            
+            if timing_results['sparse_result'] is not None:
+                print("Sparse result: list of", len(timing_results['sparse_result']), "step matrices")
+                print("Each matrix shape:", timing_results['sparse_result'][0].shape)
+                print("Sparse sample (step 0 matrix):\n", timing_results['sparse_result'][1].toarray())
 
         # Report results with memory information
         dense_avg = np.mean(timing_results['dense_times'])
@@ -202,11 +207,14 @@ def main():
         if timing_results['dense_result'] is not None:
             dense_obj_memory = timing_results['dense_result'].nbytes / 1024**2
             sparse_nnz = sum(m.nnz for m in timing_results['sparse_result'])
-            sparse_obj_memory = sparse_nnz * 8 / 1024**2  # Approximate MB
+            sparse_obj_memory = sparse_nnz * 16 / 1024**2  # CSR uses ~16 bytes per nnz
             
             print(f"Dense object size:   {dense_obj_memory:.2f} MB")
             print(f"Sparse object size:  {sparse_obj_memory:.2f} MB (est.)")
-        
+            if sparse_obj_memory > 0:
+                obj_ratio = dense_obj_memory / sparse_obj_memory
+                print(f"Object size ratio:   {obj_ratio:.2f}x {'(sparse smaller)' if obj_ratio > 1 else '(dense smaller)'}")
+
         print(f"Final memory usage:  {get_memory_usage():.2f} MB\n")
     
     print("=== Summary ===")
