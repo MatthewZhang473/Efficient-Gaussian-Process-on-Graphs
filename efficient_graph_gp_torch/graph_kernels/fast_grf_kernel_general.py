@@ -1,6 +1,6 @@
 try:
     from ..random_walk_samplers import SparseRandomWalk
-    from ..utils import get_normalized_laplacian
+    from ..utils_sparse import get_normalized_laplacian
 except ImportError:
     # For running directly or when relative imports fail
     import sys
