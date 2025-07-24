@@ -1,12 +1,12 @@
 try:
-    from ..random_walk_samplers import SparseRandomWalk
+    from ..random_walk_samplers_sparse import SparseRandomWalk
     from ..utils_sparse import get_normalized_laplacian
 except ImportError:
     # For running directly or when relative imports fail
     import sys
     import os
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from random_walk_samplers import SparseRandomWalk
+    from random_walk_samplers_sparse import SparseRandomWalk
     from utils import get_normalized_laplacian
 
 

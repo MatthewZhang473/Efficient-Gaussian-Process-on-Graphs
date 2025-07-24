@@ -7,11 +7,29 @@ import os
 import psutil
 import gc
 
-# Add the parent directory to path for imports
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# Add the parent directories to path for imports
+project_root = os.path.join(os.path.dirname(__file__), '..', '..')
+sys.path.append(project_root)
+sys.path.append(os.path.join(project_root, 'efficient_graph_gp'))
+sys.path.append(os.path.join(project_root, 'efficient_graph_gp_sparse'))
 
-from efficient_graph_gp.random_walk_samplers.sampler import RandomWalk as DenseRandomWalk, Graph as DenseGraph
-from random_walk_samplers.sparse_sampler import SparseRandomWalk
+# Import the dense implementation
+try:
+    from efficient_graph_gp.random_walk_samplers.sampler import RandomWalk as DenseRandomWalk, Graph as DenseGraph
+except ImportError as e:
+    print(f"Warning: Could not import dense implementation: {e}")
+    # Fallback import
+    sys.path.append(os.path.join(project_root, 'efficient_graph_gp', 'random_walk_samplers'))
+    from sampler import RandomWalk as DenseRandomWalk, Graph as DenseGraph
+
+# Import the sparse implementation
+try:
+    from efficient_graph_gp_sparse.random_walk_samplers_sparse.sparse_sampler import SparseRandomWalk
+except ImportError as e:
+    print(f"Warning: Could not import sparse implementation: {e}")
+    # Fallback import
+    sys.path.append(os.path.join(project_root, 'efficient_graph_gp_sparse', 'random_walk_samplers_sparse'))
+    from sparse_sampler import SparseRandomWalk
 
 def create_test_graph(n_nodes=50, avg_degree=4, seed=42):
     """Create a test graph and return both NetworkX and adjacency matrix formats."""
