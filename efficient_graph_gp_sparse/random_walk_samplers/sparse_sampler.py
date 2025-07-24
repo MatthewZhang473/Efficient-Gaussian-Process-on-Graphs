@@ -73,7 +73,9 @@ class SparseRandomWalk:
             if len(rows) == 0:
                 matrix = sp.csr_matrix((self.num_nodes, self.num_nodes))
             else:
+                # COO matrix is efficient for constructing sparse matrices
                 coo_matrix = sp.coo_matrix((data, (rows, cols)), shape=(self.num_nodes, self.num_nodes))
+                # CSR matrix is efficient for arithmetic operations
                 matrix = coo_matrix.tocsr() / num_walks
             step_matrices.append(matrix)
         
