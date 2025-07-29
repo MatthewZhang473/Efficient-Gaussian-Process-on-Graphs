@@ -21,22 +21,8 @@ class SparseLinearOperator(LinearOperator):
         return self.sparse_csr_tensor.size()
 
     def _transpose_nonbatch(self):
-        # CSR → COO
-        coo = self.sparse_csr_tensor.to_sparse_coo()
-        idx = coo._indices()
-        # Swap row and column
-        trans_idx = torch.stack([idx[1], idx[0]], dim=0)
-        # Build new COO
-        trans_shape = (
-            self.sparse_csr_tensor.size(1),
-            self.sparse_csr_tensor.size(0),
-        )
-        trans_coo = torch.sparse_coo_tensor(
-            trans_idx, coo._values(), trans_shape
-        )
-        # Convert back to CSR
-        trans_csr = trans_coo.to_sparse_csr()
-        return SparseLinearOperator(trans_csr)
+        # Tranpose -> CSC and then convert back to CSR
+        return SparseLinearOperator(self.sparse_csr_tensor.t().to_sparse_csr())
 
     
 
