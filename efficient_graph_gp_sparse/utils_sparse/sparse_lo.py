@@ -1,182 +1,86 @@
 import torch
 from linear_operator.operators import LinearOperator
-from linear_operator.operators.linear_operator_representation_tree import LinearOperatorRepresentationTree
-from typing import Union, Optional, Tuple, List
 
+class SparseLinearOperator(LinearOperator):
+    """
+    A LinearOperator that wraps a sparse CSR tensor and performs
+    sparse matrix @ dense tensor operations efficiently.
+    """
 
-class GRFLinearOperator(LinearOperator):
-    """
-    A LinearOperator for GRF kernels that extracts submatrices K[x1, x2].
-    
-    Represents K[x1, x2] where K = Phi @ Phi^T and x1, x2 are node indices.
-    """
-    
-    def __init__(self, step_matrices: List[torch.Tensor], modulator_vector: torch.Tensor, 
-                 x1_indices: torch.Tensor, x2_indices: torch.Tensor):
-        self.step_matrices = step_matrices
-        self.modulator_vector = modulator_vector
-        self.num_nodes = step_matrices[0].shape[0]
-        self.x1_indices = x1_indices.long().flatten()
-        self.x2_indices = x2_indices.long().flatten()
-        
-        # Store for reconstruction
-        self._step_matrices = step_matrices
-        self._x1_indices = self.x1_indices.clone()
-        self._x2_indices = self.x2_indices.clone()
-        self._num_nodes = self.num_nodes
-        
-        # Only pass the modulator vector to avoid reconstruction issues
-        super().__init__(modulator_vector)
-    
-    def _matmul(self, rhs: torch.Tensor) -> torch.Tensor:
-        """Efficient matrix-vector multiplication: K[x1, x2] @ rhs"""
-        batch_shape = rhs.shape[:-2]
-        num_cols = rhs.shape[-1]
-        n_x2 = len(self.x2_indices)
-        
-        # Flatten batch dimensions
-        rhs_flat = rhs.view(-1, n_x2, num_cols)
-        batch_size = rhs_flat.shape[0]
-        
-        results = []
-        for b in range(batch_size):
-            rhs_b = rhs_flat[b]
-            
-            # Expand to full node space
-            rhs_full = torch.zeros(self.num_nodes, num_cols, device=rhs.device)
-            rhs_full[self.x2_indices] = rhs_b
-            
-            # Compute Phi^T @ rhs_full
-            phi_t_rhs = torch.zeros_like(rhs_full)
-            for step, matrix in enumerate(self.step_matrices):
-                if step < len(self.modulator_vector):
-                    weight = self.modulator_vector[step]
-                    phi_t_rhs += weight * torch.sparse.mm(matrix.transpose(-2, -1), rhs_full)
-            
-            # Compute Phi @ (Phi^T @ rhs_full)
-            result_full = torch.zeros_like(phi_t_rhs)
-            for step, matrix in enumerate(self.step_matrices):
-                if step < len(self.modulator_vector):
-                    weight = self.modulator_vector[step]
-                    result_full += weight * torch.sparse.mm(matrix, phi_t_rhs)
-            
-            # Extract rows for x1_indices
-            results.append(result_full[self.x1_indices])
-        
-        result = torch.stack(results, dim=0)
-        return result.view(*batch_shape, len(self.x1_indices), num_cols)
-    
-    def _size(self) -> torch.Size:
-        batch_shape = self.modulator_vector.shape[:-1]
-        return batch_shape + torch.Size([len(self.x1_indices), len(self.x2_indices)])
-    
-    def _transpose_nonbatch(self) -> "GRFLinearOperator":
-        return GRFLinearOperator(
-            self.step_matrices, self.modulator_vector, 
-            self.x2_indices, self.x1_indices
+    def __init__(self, sparse_csr_tensor):
+        if not sparse_csr_tensor.is_sparse_csr:
+            raise ValueError("Input tensor must be a sparse CSR tensor")
+        self.sparse_csr_tensor = sparse_csr_tensor
+        super().__init__(sparse_csr_tensor)
+
+    def _matmul(self, rhs):
+        # Use tensor.matmul for CSR tensors
+        return self.sparse_csr_tensor.matmul(rhs)
+
+    def _size(self):
+        return self.sparse_csr_tensor.size()
+
+    def _transpose_nonbatch(self):
+        # CSR → COO
+        coo = self.sparse_csr_tensor.to_sparse_coo()
+        idx = coo._indices()
+        # Swap row and column
+        trans_idx = torch.stack([idx[1], idx[0]], dim=0)
+        # Build new COO
+        trans_shape = (
+            self.sparse_csr_tensor.size(1),
+            self.sparse_csr_tensor.size(0),
         )
-    
-    def _diagonal(self) -> torch.Tensor:
-        """Extract diagonal elements efficiently"""
-        if not torch.equal(self.x1_indices, self.x2_indices):
-            raise RuntimeError("Diagonal only defined for square matrices with identical indices")
-        
-        batch_shape = self.modulator_vector.shape[:-1]
-        diagonal = torch.zeros(*batch_shape, len(self.x1_indices), device=self.modulator_vector.device)
-        
-        for i, node_idx in enumerate(self.x1_indices):
-            # Create unit vector for this node
-            e_i = torch.zeros(self.num_nodes, 1, device=self.modulator_vector.device)
-            e_i[node_idx, 0] = 1.0
-            
-            # Compute Phi^T @ e_i
-            phi_t_ei = torch.zeros_like(e_i)
-            for step, matrix in enumerate(self.step_matrices):
-                if step < len(self.modulator_vector):
-                    weight = self.modulator_vector[step]
-                    phi_t_ei += weight * torch.sparse.mm(matrix.transpose(-2, -1), e_i)
-            
-            # Compute Phi @ (Phi^T @ e_i)
-            phi_ei = torch.zeros_like(phi_t_ei)
-            for step, matrix in enumerate(self.step_matrices):
-                if step < len(self.modulator_vector):
-                    weight = self.modulator_vector[step]
-                    phi_ei += weight * torch.sparse.mm(matrix, e_i)
-            
-            # Diagonal element is e_i^T @ Phi @ (Phi^T @ e_i)
-            diagonal[..., i] = (phi_ei.squeeze(-1) * phi_t_ei.squeeze(-1)).sum()
-        
-        return diagonal
-    
-    def _bilinear_derivative(self, left_vecs: torch.Tensor, right_vecs: torch.Tensor) -> Tuple[torch.Tensor]:
-        """
-        Compute derivatives for backpropagation through the modulator vector.
-        """
-        derivatives = []
-        
-        for step, matrix in enumerate(self.step_matrices):
-            if step < len(self.modulator_vector):
-                # Expand left_vecs and right_vecs to full node space
-                left_full = torch.zeros(self.num_nodes, left_vecs.shape[-1], device=left_vecs.device)
-                right_full = torch.zeros(self.num_nodes, right_vecs.shape[-1], device=right_vecs.device)
-                left_full[self.x1_indices] = left_vecs
-                right_full[self.x2_indices] = right_vecs
-                
-                # Compute derivative w.r.t. modulator_vector[step]
-                ps_right = torch.sparse.mm(matrix, right_full)
-                pst_left = torch.sparse.mm(matrix.transpose(-2, -1), left_full)
-                
-                # Two terms: left^T @ P_s @ P_s^T @ right + left^T @ P_s^T @ P_s @ right
-                term1 = (left_full * ps_right).sum()
-                term2 = (pst_left * torch.sparse.mm(matrix, right_full)).sum()
-                
-                derivatives.append(term1 + term2)
-            else:
-                derivatives.append(torch.tensor(0.0, device=self.modulator_vector.device))
-        
-        modulator_grad = torch.stack(derivatives)
-        return (modulator_grad,)
-    
-    def _clone_with_different_tensors(self, *tensors):
-        """Handle cloning with different tensors"""
-        if len(tensors) == 1:
-            # Create new instance with the new modulator_vector
-            return GRFLinearOperator(
-                self._step_matrices, 
-                tensors[0], 
-                self._x1_indices, 
-                self._x2_indices
-            )
-        else:
-            raise NotImplementedError(f"Unexpected number of tensors for cloning: {len(tensors)}")
-    
-    def representation(self):
-        """Return only the differentiable tensor"""
-        return (self.modulator_vector,)
-    
-    def representation_tree(self):
-        """Return a proper representation tree for reconstruction"""
-        return LinearOperatorRepresentationTree(
-            self.__class__,
-            # Pass the stored references for reconstruction
-            step_matrices=self._step_matrices,
-            x1_indices=self._x1_indices,
-            x2_indices=self._x2_indices,
-            num_nodes=self._num_nodes
+        trans_coo = torch.sparse_coo_tensor(
+            trans_idx, coo._values(), trans_shape
         )
+        # Convert back to CSR
+        trans_csr = trans_coo.to_sparse_csr()
+        return SparseLinearOperator(trans_csr)
+
     
-    @classmethod  
-    def _make_linear_operator(cls, modulator_vector, **kwargs):
-        """Class method to create the LinearOperator from representation"""
-        return cls(
-            kwargs['step_matrices'],
-            modulator_vector,
-            kwargs['x1_indices'], 
-            kwargs['x2_indices']
-        )
+
+if __name__ == "__main__":
+    print("Testing SparseLinearOperator...")
     
-    def to_dense(self) -> torch.Tensor:
-        """Override to_dense to avoid reconstruction issues"""
-        # Create identity matrix and use our _matmul directly
-        I = torch.eye(len(self.x2_indices), device=self.modulator_vector.device)
-        return self._matmul(I)
+    # Create a simple sparse CSR tensor
+    # Example: 3x3 matrix with some non-zero elements
+    indices = torch.tensor([[0, 0, 1, 2], [0, 2, 1, 0]])  # row, col indices
+    values = torch.tensor([1.0, 2.0, 3.0, 4.0])
+    size = (3, 3)
+    sparse_coo = torch.sparse_coo_tensor(indices, values, size)
+    sparse_csr = sparse_coo.to_sparse_csr()
+    
+    print(f"Original sparse CSR tensor:\n{sparse_csr}")
+    print(f"Dense version:\n{sparse_csr.to_dense()}")
+    
+    # Create the SparseLinearOperator
+    sparse_op = SparseLinearOperator(sparse_csr)
+    
+    # Test basic properties
+    print(f"\nOperator size: {sparse_op.size()}")
+    print(f"Operator shape: {sparse_op.shape}")
+    
+    # Test matrix multiplication with dense tensor
+    rhs = torch.tensor([[1.0], [2.0], [3.0]], dtype=torch.float32)
+    print(f"\nRight-hand side tensor:\n{rhs}")
+    
+    result = sparse_op @ rhs
+    print(f"\nSparse @ dense result:\n{result}")
+    
+    # Compare with dense matrix multiplication
+    dense_result = sparse_csr.to_dense() @ rhs
+    print(f"Dense @ dense result (for comparison):\n{dense_result}")
+    print(f"Results match: {torch.allclose(result, dense_result)}")
+    
+    # Test transpose
+    sparse_op_t = sparse_op.t()
+    print(f"\nTransposed operator size: {sparse_op_t.size()}")
+    
+    # Test transpose multiplication
+    lhs = torch.tensor([[1.0, 2.0, 3.0]], dtype=torch.float32)
+    result_t = lhs @ sparse_op
+    print(f"\nDense @ sparse result:\n{result_t}")
+    
+    print("\nAll tests completed successfully!")
+
