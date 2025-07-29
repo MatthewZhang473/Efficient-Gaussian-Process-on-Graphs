@@ -4,22 +4,25 @@ import numpy as np
 import sys
 import os
 import scipy.sparse as sp
+from linear_operator import LinearOperator
 
 # Import sparse implementations
 try:
     from ..random_walk_samplers_sparse import SparseRandomWalk
     from ..utils_sparse import get_normalized_laplacian
+    from ..utils_sparse.sparse_lo import GRFLinearOperator
 except ImportError:
     # For running directly or when relative imports fail
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from random_walk_samplers_sparse import SparseRandomWalk
     from utils_sparse import get_normalized_laplacian
+    from utils_sparse.sparse_lo import GRFLinearOperator
 
 
-class GraphGeneralFastGRFKernel(gpytorch.kernels.Kernel):
+class SparseGRFKernel(gpytorch.kernels.Kernel):
     def __init__(
         self,
-        adjacency_matrix,  # Acceptcscipy sparse matrix only
+        adjacency_matrix,  # Accept scipy sparse matrix only
         walks_per_node: int = 50,
         p_halt: float = 0.1,
         max_walk_length: int = 10,
@@ -64,32 +67,24 @@ class GraphGeneralFastGRFKernel(gpytorch.kernels.Kernel):
         return self.raw_modulator_vector
 
     def forward(self, x1, x2, diag=False, **params):
-        # Compute Phi = sum(f_p * M_p) using PyTorch sparse operations to maintain gradients
-        Phi = None
-        for step, matrix in enumerate(self.step_matrices):
-            if step < len(self.modulator_vector):
-                weighted_matrix = matrix * self.modulator_vector[step]
-                if Phi is None:
-                    Phi = weighted_matrix
-                else:
-                    Phi = Phi + weighted_matrix
+        """
+        Forward pass using GRFLinearOperator for efficient computation.
         
-        # Move to correct device
-        if Phi is not None:
-            Phi = Phi.to(device=self.modulator_vector.device)
-        
-        # Extract indices
+        Args:
+            x1, x2: Node indices tensors 
+            diag: If True, return diagonal as tensor; if False, return LinearOperator
+            
+        Returns:
+            Kernel matrix K[x1, x2] as LinearOperator when diag=False, or diagonal tensor when diag=True
+        """
+        # Convert x1, x2 to node indices
         x1_idx = x1.long().flatten()
         x2_idx = x2.long().flatten()
         
+        # Create GRF LinearOperator that represents K[x1, x2]
+        kernel_op = GRFLinearOperator(self.step_matrices, self.modulator_vector, x1_idx, x2_idx)
+        
         if diag:
-            # Compute diagonal elements: diag(Phi @ Phi.T) = rowwise dot products
-            Phi_dense = Phi.to_dense()
-            Phi_rows = Phi_dense[x1_idx]
-            return torch.sum(Phi_rows * Phi_rows, dim=1)
+            return kernel_op.diagonal(dim1=-2, dim2=-1)
         else:
-            # Compute K[x1, x2] = Phi[x1] @ Phi[x2].T
-            Phi_dense = Phi.to_dense()
-            Phi_x1 = Phi_dense[x1_idx]
-            Phi_x2 = Phi_dense[x2_idx]
-            return torch.mm(Phi_x1, Phi_x2.t())
+            return kernel_op
