@@ -82,8 +82,8 @@ class SparseGRFKernel(gpytorch.kernels.Kernel):
             phi_x2 = phi
             
         if diag:
-            # Return diagonal as tensor
-            raise NotImplementedError("Diagonal computation TBC.")
+            # diag(A @ B^T) = sum(A * B, dim=-1)
+            return (phi_x1 * phi_x2).sum(dim=-1)
             
         else:
             # Return K[x1, x2] = Phi[x1, :] @ Phi[x2, :]^T
