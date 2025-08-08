@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.sparse as sp
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
+import os
 
 
 class SparseRandomWalk:
@@ -15,6 +17,7 @@ class SparseRandomWalk:
         self.adjacency = adjacency_matrix.tocsr()
         self.num_nodes = adjacency_matrix.shape[0]
         self.rng = np.random.default_rng(seed)
+        self.seed = seed or 42
         
         # Cache neighbors and weights for efficiency
         self._neighbors = {}
@@ -24,23 +27,29 @@ class SparseRandomWalk:
             self._neighbors[node] = row.indices
             self._weights[node] = row.data
     
-    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False):
-        """
-        Generate random walk step matrices.
+    @staticmethod
+    def _worker_walks(args):
+        """Worker function for multiprocessing random walks."""
+        nodes, adj_data, num_walks, p_halt, max_walk_length, seed, show_progress, n_processes = args
         
-        Args:
-            num_walks: Number of walks per starting node
-            p_halt: Probability of halting at each step
-            max_walk_length: Maximum steps per walk
-            use_tqdm: Show progress bar
-            
-        Returns:
-            List of sparse CSR matrices, each num_nodes × num_nodes representing walks at step t.
-        """
-        # Initialize collectors for each step
+        # Reconstruct adjacency matrix and setup
+        data, indices, indptr, shape = adj_data
+        adjacency = sp.csr_matrix((data, indices, indptr), shape=shape)
+        rng = np.random.default_rng(seed)
+        
+        # Cache neighbors and weights for ALL nodes (since walks can visit any node)
+        neighbors = {}
+        weights = {}
+        for node in range(shape[0]):
+            row = adjacency.getrow(node)
+            neighbors[node] = row.indices
+            weights[node] = row.data
+        
+        # Initialize collectors
         step_data = {step: ([], [], []) for step in range(max_walk_length)}
         
-        iterator = tqdm(range(self.num_nodes), desc="Random walks", disable=not use_tqdm)
+        # Only show progress for one process (the first one)
+        iterator = tqdm(nodes, desc=f"Process 1/{n_processes} - Nodes processed", disable=not show_progress) if show_progress else nodes
         
         for start_node in iterator:
             for _ in range(num_walks):
@@ -54,28 +63,66 @@ class SparseRandomWalk:
                     step_data[step][2].append(load)
                     
                     # Get neighbors and check termination
-                    neighbors = self._neighbors[current_node]
-                    degree = len(neighbors)
+                    node_neighbors = neighbors[current_node]
+                    degree = len(node_neighbors)
                     
-                    if degree == 0 or self.rng.random() < p_halt:
+                    if degree == 0 or rng.random() < p_halt:
                         break
                     
                     # Move to next node and update load
-                    next_idx = self.rng.choice(degree)
-                    weight = self._weights[current_node][next_idx]  # Get weight before moving
-                    current_node = neighbors[next_idx]
+                    next_idx = rng.choice(degree)
+                    weight = weights[current_node][next_idx]  # Get weight before moving
+                    current_node = node_neighbors[next_idx]
                     load *= degree * weight / (1 - p_halt)
         
-        # Build final matrices
+        return step_data
+    
+    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False, n_processes=None):
+        """
+        Generate random walk step matrices.
+        
+        Args:
+            num_walks: Number of walks per starting node
+            p_halt: Probability of halting at each step
+            max_walk_length: Maximum steps per walk
+            use_tqdm: Show progress bar
+            n_processes: Number of processes (default: CPU count)
+            
+        Returns:
+            List of sparse CSR matrices, each num_nodes × num_nodes representing walks at step t.
+        """
+        if n_processes is None:
+            n_processes = os.cpu_count()
+        
+        # Split nodes across processes
+        chunks = np.array_split(range(self.num_nodes), n_processes)
+        adj_data = (self.adjacency.data, self.adjacency.indices, self.adjacency.indptr, self.adjacency.shape)
+        
+        # Prepare worker arguments - only first process shows progress
+        args = [
+            (chunk.tolist(), adj_data, num_walks, p_halt, max_walk_length, self.seed + i, use_tqdm and i == 0, n_processes)
+            for i, chunk in enumerate(chunks)
+        ]
+        
+        # Execute in parallel
+        with ProcessPoolExecutor(max_workers=n_processes) as executor:
+            results = list(executor.map(self._worker_walks, args))
+        
+        # Combine results
+        step_data = {step: ([], [], []) for step in range(max_walk_length)}
+        for result in results:
+            for step in range(max_walk_length):
+                for i in range(3):
+                    step_data[step][i].extend(result[step][i])
+        
+        # Build matrices
         step_matrices = []
         for step in range(max_walk_length):
             rows, cols, data = step_data[step]
             if len(rows) == 0:
                 matrix = sp.csr_matrix((self.num_nodes, self.num_nodes))
             else:
-                # COO matrix is efficient for constructing sparse matrices
                 coo_matrix = sp.coo_matrix((data, (rows, cols)), shape=(self.num_nodes, self.num_nodes))
-                # CSR matrix is efficient for arithmetic operations
                 matrix = coo_matrix.tocsr() / num_walks
             step_matrices.append(matrix)
         
@@ -83,6 +130,9 @@ class SparseRandomWalk:
 
 
 if __name__ == "__main__":
+    # Check available CPU cores
+    print(f"Available CPU cores: {os.cpu_count()}")
+    
     # Example usage
     rows = [0, 0, 0, 1, 1, 2, 2, 3]
     cols = [1, 2, 3, 0, 2, 0, 3, 0]
@@ -91,7 +141,7 @@ if __name__ == "__main__":
     
     walker = SparseRandomWalk(adjacency, seed=42)
     step_matrices = walker.get_random_walk_matrices(
-        num_walks=1000, p_halt=0.1, max_walk_length=6, use_tqdm=True
+        num_walks=100000, p_halt=0.1, max_walk_length=6, use_tqdm=True, n_processes=4
     )
     
     print(f"Generated {len(step_matrices)} step matrices")
