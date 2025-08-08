@@ -20,13 +20,18 @@ class SparseRandomWalk:
         self.rng = np.random.default_rng(seed)
         self.seed = seed or 42
         
-        # Cache neighbors and weights for efficiency
+        # Cache neighbors and weights for efficiency using direct CSR access
         self._neighbors = {}
         self._weights = {}
-        for node in range(self.num_nodes):
-            row = self.adjacency.getrow(node)
-            self._neighbors[node] = row.indices
-            self._weights[node] = row.data
+        indptr = self.adjacency.indptr
+        indices = self.adjacency.indices
+        data = self.adjacency.data
+        
+        for node in tqdm(range(self.num_nodes), desc="Caching neighbors and weights"):
+            start_idx = indptr[node]
+            end_idx = indptr[node + 1]
+            self._neighbors[node] = indices[start_idx:end_idx]
+            self._weights[node] = data[start_idx:end_idx]
     
     @staticmethod
     def _worker_walks(args):
