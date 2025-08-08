@@ -2,6 +2,7 @@ import numpy as np
 import scipy.sparse as sp
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from collections import defaultdict
 import os
 
 
@@ -45,8 +46,8 @@ class SparseRandomWalk:
             neighbors[node] = row.indices
             weights[node] = row.data
         
-        # Initialize collectors
-        step_data = {step: ([], [], []) for step in range(max_walk_length)}
+        # Initialize dictionary accumulators instead of coordinate lists
+        step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
         
         # Only show progress for one process (the first one)
         iterator = tqdm(nodes, desc=f"Process 1/{n_processes} - Nodes processed", disable=not show_progress) if show_progress else nodes
@@ -57,10 +58,8 @@ class SparseRandomWalk:
                 load = 1.0
                 
                 for step in range(max_walk_length):
-                    # Accumulate visit: [start_node, current_node] = load
-                    step_data[step][0].append(start_node)
-                    step_data[step][1].append(current_node)
-                    step_data[step][2].append(load)
+                    # Accumulate load for (start_node, current_node) pair
+                    step_accumulators[step][(start_node, current_node)] += load
                     
                     # Get neighbors and check termination
                     node_neighbors = neighbors[current_node]
@@ -75,8 +74,8 @@ class SparseRandomWalk:
                     current_node = node_neighbors[next_idx]
                     load *= degree * weight / (1 - p_halt)
         
-        return step_data
-    
+        return step_accumulators
+
     def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False, n_processes=None):
         """
         Generate random walk step matrices.
@@ -108,22 +107,28 @@ class SparseRandomWalk:
         with ProcessPoolExecutor(max_workers=n_processes) as executor:
             results = list(executor.map(self._worker_walks, args))
         
-        # Combine results
-        step_data = {step: ([], [], []) for step in range(max_walk_length)}
+        # Merge dictionaries from all processes
+        step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
         for result in results:
             for step in range(max_walk_length):
-                for i in range(3):
-                    step_data[step][i].extend(result[step][i])
+                for coord_pair, value in result[step].items():
+                    step_accumulators[step][coord_pair] += value
         
-        # Build matrices
+        # Convert dictionaries to COO matrices
         step_matrices = []
         for step in range(max_walk_length):
-            rows, cols, data = step_data[step]
-            if len(rows) == 0:
-                matrix = sp.csr_matrix((self.num_nodes, self.num_nodes))
-            else:
+            if step_accumulators[step]:
+                # Extract coordinates and values
+                coord_pairs = list(step_accumulators[step].keys())
+                rows = [pair[0] for pair in coord_pairs]
+                cols = [pair[1] for pair in coord_pairs]  
+                data = [step_accumulators[step][pair] for pair in coord_pairs]
+                
                 coo_matrix = sp.coo_matrix((data, (rows, cols)), shape=(self.num_nodes, self.num_nodes))
                 matrix = coo_matrix.tocsr() / num_walks
+            else:
+                matrix = sp.csr_matrix((self.num_nodes, self.num_nodes))
+                
             step_matrices.append(matrix)
         
         return step_matrices
