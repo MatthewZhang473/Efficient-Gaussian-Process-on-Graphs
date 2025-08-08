@@ -80,7 +80,7 @@ class GraphPreprocessor:
                               self.adj_matrix.indptr.tobytes()).hexdigest()[:8]
         graph_size = self.adj_matrix.shape[0]
         params = f"{graph_size}_{self.walks_per_node}_{self.p_halt}_{self.max_walk_length}_{self.random_walk_seed}"
-        return f"step_matrices_{adj_hash}_{params}.pkl"
+        return f"experiments_sparse/step_matrices/step_matrices_{adj_hash}_{params}.pkl"
 
     def preprocess_graph(self, save_to_disk: bool = False) -> List[SparseLinearOperator]:
         """
