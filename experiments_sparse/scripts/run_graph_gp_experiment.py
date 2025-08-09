@@ -20,6 +20,25 @@ sys.path.insert(0, project_root)
 from efficient_graph_gp_sparse.gptorch_kernels_sparse.sparse_grf_kernel import SparseGRFKernel
 from efficient_graph_gp_sparse.preprocessor import GraphPreprocessor
 
+# Set seeds for reproducibility
+np.random.seed(42)
+torch.manual_seed(42)
+
+# Device configuration
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+print(f"Using device: {device}")
+
+def to_device(data, device):
+    """Helper function to move data to device"""
+    if isinstance(data, dict):
+        return {k: to_device(v, device) for k, v in data.items()}
+    elif isinstance(data, (list, tuple)):
+        return [to_device(item, device) for item in data]
+    elif isinstance(data, torch.Tensor):
+        return data.to(device)
+    else:
+        return data
+
 # =============================================================================
 # EXPERIMENT CONFIGURATION
 # =============================================================================
@@ -36,12 +55,12 @@ gsettings.num_trace_samples._global_value = 64
 gsettings.min_preconditioning_size._global_value = 1e10
 
 # Dataset parameters
-N_NODES = int(1e5)
+N_NODES = int(1e6)
 NOISE_STD = 0.1
 SPLITS = [0.6, 0.2, 0.2]
 
 # Kernel parameters
-WALKS_PER_NODE = 1000
+WALKS_PER_NODE = 100
 P_HALT = 0.1
 MAX_WALK_LENGTH = 3
 RANDOM_WALK_SEED = 42
@@ -59,11 +78,7 @@ PRINT_INTERVAL = 20
 # Inference parameters
 PATHWISE_SAMPLES = 64
 
-# Set seeds for reproducibility
-np.random.seed(42)
-torch.manual_seed(42)
-
-def create_ring_dataset(n_nodes=50, noise_std=0.1, splits=[0.6, 0.2, 0.2]):
+def create_ring_dataset(n_nodes=50, noise_std=0.1, splits=[0.6, 0.2, 0.2], device='cpu'):
     """Create ring graph dataset with train/val/test splits"""
     # Create graph
     G = nx.cycle_graph(n_nodes)
@@ -84,14 +99,14 @@ def create_ring_dataset(n_nodes=50, noise_std=0.1, splits=[0.6, 0.2, 0.2]):
     val_idx = np.random.choice(remaining, val_size, replace=False)
     test_idx = np.setdiff1d(remaining, val_idx)
     
-    # Convert to tensors
+    # Convert to tensors on specified device
     data = {
-        'X_train': torch.tensor(train_idx, dtype=torch.float32).unsqueeze(1),
-        'y_train': torch.tensor(y_observed[train_idx], dtype=torch.float32),
-        'X_val': torch.tensor(val_idx, dtype=torch.float32).unsqueeze(1),
-        'y_val': torch.tensor(y_observed[val_idx], dtype=torch.float32),
-        'X_test': torch.tensor(test_idx, dtype=torch.float32).unsqueeze(1),
-        'y_test': torch.tensor(y_observed[test_idx], dtype=torch.float32),
+        'X_train': torch.tensor(train_idx, dtype=torch.float32, device=device).unsqueeze(1),
+        'y_train': torch.tensor(y_observed[train_idx], dtype=torch.float32, device=device),
+        'X_val': torch.tensor(val_idx, dtype=torch.float32, device=device).unsqueeze(1),
+        'y_val': torch.tensor(y_observed[val_idx], dtype=torch.float32, device=device),
+        'X_test': torch.tensor(test_idx, dtype=torch.float32, device=device).unsqueeze(1),
+        'y_test': torch.tensor(y_observed[test_idx], dtype=torch.float32, device=device),
         'A': A, 'G': G, 'y_true': y_true, 'y_observed': y_observed,
         'train_idx': train_idx, 'val_idx': val_idx, 'test_idx': test_idx
     }
@@ -188,7 +203,7 @@ def train_model(model, likelihood, data, lr=0.01, max_iter=100, patience=20):
             val_output = model.forward(data['X_val'])
             val_loss = -mll(val_output, data['y_val'])
             val_pred = likelihood(val_output)
-            val_rmse = np.sqrt(mean_squared_error(data['y_val'], val_pred.mean))        
+            val_rmse = np.sqrt(mean_squared_error(data['y_val'].cpu().numpy(), val_pred.mean.cpu().numpy()))        
         val_losses.append(val_loss.item())
         val_rmses.append(val_rmse)
         
@@ -202,7 +217,7 @@ def train_model(model, likelihood, data, lr=0.01, max_iter=100, patience=20):
             
         if i % PRINT_INTERVAL == 0:
             print(f'Iter {i+1}: Train Loss={train_loss:.3f}, Val Loss={val_loss:.3f}, '
-                  f'modulator={model.covar_module.modulator_vector.detach().numpy()}, '
+                  f'modulator={model.covar_module.modulator_vector.detach().cpu().numpy()}, '
                   f'noise={likelihood.noise.item():.4f}')
             
         model.train()
@@ -248,7 +263,7 @@ def evaluate_model(model, likelihood, X, y, split_name, n_samples=100):
 def main():
     """Main experiment function"""
     print("=== CREATING DATASET ===")
-    data = create_ring_dataset(n_nodes=N_NODES, noise_std=NOISE_STD, splits=SPLITS)
+    data = create_ring_dataset(n_nodes=N_NODES, noise_std=NOISE_STD, splits=SPLITS, device=device)
     
     print("\n=== PREPROCESSING GRAPH ===")
     print(f"Available CPU cores: {os.cpu_count()}")
@@ -261,7 +276,7 @@ def main():
         random_walk_seed=RANDOM_WALK_SEED,
         load_from_disk=LOAD_FROM_DISK,
         use_tqdm=True,
-        n_processes=None  # Use all available cores
+        n_processes=15  # Use all available cores
     )
     
     if not LOAD_FROM_DISK:
@@ -269,9 +284,19 @@ def main():
     else:
         step_matrices_torch = pp.step_matrices_torch
     
+    # Move step matrices to device
+    step_matrices_torch = [step_matrix.to(device) for step_matrix in step_matrices_torch]
+    
     print("\n=== INITIALIZING MODEL ===")
     likelihood = gpytorch.likelihoods.GaussianLikelihood()
     model = GraphGPModel(data['X_train'], data['y_train'], likelihood, step_matrices_torch)
+    
+    # Move model and likelihood to device
+    model = model.to(device)
+    likelihood = likelihood.to(device)
+    
+    print(f"Model device: {next(model.parameters()).device}")
+    print(f"Data devices: X_train={data['X_train'].device}, y_train={data['y_train'].device}")
     
     print("\n=== TRAINING MODEL ===")
     train_losses, val_losses, val_rmses = train_model(
@@ -291,7 +316,7 @@ def main():
     
     print("\n=== GENERATING FULL GRAPH PREDICTIONS ===")
     with torch.no_grad():
-        X_all = torch.arange(len(data['y_true']), dtype=torch.float32).unsqueeze(1)
+        X_all = torch.arange(len(data['y_true']), dtype=torch.float32, device=device).unsqueeze(1)
         all_samples = model.predict(X_all, n_samples=PATHWISE_SAMPLES)
         all_mean = all_samples.mean(dim=0)
         all_std = all_samples.std(dim=0)
@@ -303,12 +328,14 @@ def main():
     
     # 1. Predictions vs true function
     n_nodes = len(data['y_true'])
-    ax1.scatter(data['train_idx'], data['y_train'], c='blue', alpha=0.7, s=20, label='Train')
-    ax1.scatter(data['val_idx'], data['y_val'], c='orange', alpha=0.7, s=20, label='Val')
-    ax1.scatter(data['test_idx'], data['y_test'], c='red', alpha=0.7, s=20, label='Test')
+    ax1.scatter(data['train_idx'], data['y_train'].cpu().numpy(), c='blue', alpha=0.7, s=20, label='Train')
+    ax1.scatter(data['val_idx'], data['y_val'].cpu().numpy(), c='orange', alpha=0.7, s=20, label='Val')
+    ax1.scatter(data['test_idx'], data['y_test'].cpu().numpy(), c='red', alpha=0.7, s=20, label='Test')
     ax1.plot(range(n_nodes), data['y_true'], 'k--', linewidth=2, label='True')
-    ax1.plot(range(n_nodes), all_mean, 'g-', linewidth=2, label='GP mean')
-    ax1.fill_between(range(n_nodes), all_mean - 2*all_std, all_mean + 2*all_std, 
+    ax1.plot(range(n_nodes), all_mean.cpu().numpy(), 'g-', linewidth=2, label='GP mean')
+    ax1.fill_between(range(n_nodes), 
+                    (all_mean - 2*all_std).cpu().numpy(), 
+                    (all_mean + 2*all_std).cpu().numpy(), 
                     alpha=0.2, color='green', label='95% CI')
     ax1.set_xlabel('Node index')
     ax1.set_ylabel('Function value')
@@ -346,7 +373,7 @@ def main():
     ax3_twin.legend(loc='upper right')
     
     # 4. Learned parameters
-    modulator = model.covar_module.modulator_vector.data.numpy()
+    modulator = model.covar_module.modulator_vector.detach().cpu().numpy()
     ax4.bar(range(len(modulator)), modulator, color='purple', alpha=0.7)
     ax4.set_xlabel('Walk step')
     ax4.set_ylabel('Weight')
