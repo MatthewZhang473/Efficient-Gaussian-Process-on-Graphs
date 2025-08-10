@@ -1,6 +1,6 @@
 {
   "conversion_info": {
-    "timestamp": "2025-08-10T08:31:59.171512",
+    "timestamp": "2025-08-10T11:38:02.578891",
     "total_files_converted": 3,
     "file_details": [
       {
@@ -27,7 +27,7 @@
     "rw_sampling": {
       "metadata": {
         "source_file": "rw_sampling_stats_20250810_020458.csv",
-        "conversion_timestamp": "2025-08-10T08:31:57.715648",
+        "conversion_timestamp": "2025-08-10T11:38:00.994939",
         "source_modified": "2025-08-10T02:04:58.802807",
         "total_records": 80,
         "columns": [
@@ -1759,7 +1759,7 @@
     "sparse_gp": {
       "metadata": {
         "source_file": "sparse_gp_scaling_stats_20250810_024906.csv",
-        "conversion_timestamp": "2025-08-10T08:31:58.573458",
+        "conversion_timestamp": "2025-08-10T11:38:01.982127",
         "source_modified": "2025-08-10T02:49:07.095155",
         "total_records": 80,
         "columns": [
@@ -2753,7 +2753,7 @@
     "dense_gp": {
       "metadata": {
         "source_file": "dense_gp_scaling_stats_20250810_025004.csv",
-        "conversion_timestamp": "2025-08-10T08:31:59.004530",
+        "conversion_timestamp": "2025-08-10T11:38:02.411239",
         "source_modified": "2025-08-10T02:50:04.380239",
         "total_records": 30,
         "columns": [
