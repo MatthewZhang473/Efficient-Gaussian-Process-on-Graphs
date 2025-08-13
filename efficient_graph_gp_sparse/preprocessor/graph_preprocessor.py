@@ -7,7 +7,6 @@ import hashlib
 import os
 from typing import List, Optional
 
-
 class GraphPreprocessor:
     """
     Graph Preprocessor for Graph GP models.
@@ -33,7 +32,8 @@ class GraphPreprocessor:
                  random_walk_seed: int = 42,
                  load_from_disk: bool = False,
                  use_tqdm: bool = True,
-                 cache_filename: Optional[str] = None
+                 cache_filename: Optional[str] = None,
+                 n_processes: int = None
                  ) -> None:
         """
         Initialize the GraphPreprocessor.
@@ -46,6 +46,8 @@ class GraphPreprocessor:
             random_walk_seed (int): Seed for reproducibility.
             use_tqdm (bool): Whether to use tqdm for progress bars.
             load_from_disk (bool): Whether to load precomputed step matrices from disk.
+            cache_filename (Optional[str]): Custom cache filename.
+            n_processes (Optional[int]): Number of processes for multiprocessing (default: CPU count).
         """
         # Validate adjacency matrix
         if adjacency_matrix.shape[0] != adjacency_matrix.shape[1]:
@@ -58,6 +60,7 @@ class GraphPreprocessor:
         self.random_walk_seed = random_walk_seed
         self.use_tqdm = use_tqdm
         self.cache_filename = cache_filename or self._generate_cache_filename()
+        self.n_processes = n_processes
 
         if load_from_disk:
             if os.path.exists(self.cache_filename):
@@ -77,7 +80,7 @@ class GraphPreprocessor:
                               self.adj_matrix.indptr.tobytes()).hexdigest()[:8]
         graph_size = self.adj_matrix.shape[0]
         params = f"{graph_size}_{self.walks_per_node}_{self.p_halt}_{self.max_walk_length}_{self.random_walk_seed}"
-        return f"step_matrices_{adj_hash}_{params}.pkl"
+        return f"experiments_sparse/step_matrices/step_matrices_{adj_hash}_{params}.pkl"
 
     def preprocess_graph(self, save_to_disk: bool = False) -> List[SparseLinearOperator]:
         """
@@ -92,11 +95,11 @@ class GraphPreprocessor:
         # Compute the normalized Laplacian
         laplacian = get_normalized_laplacian(self.adj_matrix)
 
-        # Perform random walks
+        # Perform random walks with multiprocessing
         random_walk = SparseRandomWalk(laplacian, seed=self.random_walk_seed)
         self.step_matrices_scipy = random_walk.get_random_walk_matrices(
             self.walks_per_node, self.p_halt, self.max_walk_length,
-            use_tqdm=self.use_tqdm
+            use_tqdm=self.use_tqdm, n_processes=self.n_processes
         )
 
         # Save step matrices to disk only if requested
