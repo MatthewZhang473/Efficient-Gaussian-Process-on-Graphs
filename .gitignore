@@ -3,6 +3,8 @@ venv
 *.pyc
 *.pkl
 *.csv
+*.gz
+*.npz
 .DS_Store
 pems-bay.h5
 PKG-INFO
