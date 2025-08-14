@@ -17,11 +17,11 @@ class Config:
     
     def __init__(self):
         # Dataset parameters
-        self.N_NODES = int(1e2)
+        self.N_NODES = int(1e4)
         self.NOISE_STD = 0.1
         
         # Kernel parameters
-        self.WALKS_PER_NODE = 10000
+        self.WALKS_PER_NODE = 1000
         self.P_HALT = 0.1
         self.MAX_WALK_LENGTH = 3
         
@@ -30,14 +30,14 @@ class Config:
         self.TRAIN_EPOCHS = 50
         
         # BO parameters
-        self.NUM_BO_ITERATIONS = 100
+        self.NUM_BO_ITERATIONS = 200
         self.INITIAL_POINTS = 10
         self.BATCH_SIZE = 2
         self.GP_RETRAIN_INTERVAL = 5
         
         # Random Seeds
         self.DATA_SEED = 42
-        self.NUM_BO_RUNS = 3
+        self.NUM_BO_RUNS = 10
         self.BO_SEEDS = [100 + i * 10 for i in range(self.NUM_BO_RUNS)]
         
         # Data synthesis parameters - remove kernel_std since it's not used

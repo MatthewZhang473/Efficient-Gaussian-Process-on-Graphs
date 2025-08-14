@@ -108,7 +108,7 @@ class BayesianOptimizer:
         best_value = float(Y_observed.max())
         best_idx = observed_indices[torch.argmax(Y_observed).item()]
         
-        with tqdm(range(n_iterations), desc=f"    {algorithm_name}", leave=False) as pbar:
+        with tqdm(range(n_iterations), desc=f"    {algorithm_name}", leave=False, miniters=10) as pbar:
             for iteration in pbar:
                 if hasattr(self.algorithm, 'select_next_points') and self.batch_size > 1:
                     next_indices = self.algorithm.select_next_points(X_observed, Y_observed, self.batch_size)
