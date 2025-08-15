@@ -17,7 +17,7 @@ class Config:
     
     def __init__(self):
         # Dataset parameters
-        self.N_NODES = int(1e4)
+        self.N_NODES = int(1e6)
         self.NOISE_STD = 0.1
         
         # Kernel parameters
@@ -37,7 +37,7 @@ class Config:
 
         # Random Seeds
         self.DATA_SEED = 42
-        self.NUM_BO_RUNS = 3
+        self.NUM_BO_RUNS = 5
         self.BO_SEEDS = [100 + i * 10 for i in range(self.NUM_BO_RUNS)]
         
         # Data synthesis parameters - remove kernel_std since it's not used
