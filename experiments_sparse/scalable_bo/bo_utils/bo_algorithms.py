@@ -67,6 +67,7 @@ class SparseGRF(Algorithm):
         current_size = len(X_observed)
         
         if self._should_retrain(current_size):
+            tqdm.write(f"Retraining model with {current_size} observed points...")
             model, likelihood = self._train_model(X_observed, Y_observed)
         else:
             model, likelihood = self.cached_model, self.cached_likelihood
@@ -114,30 +115,28 @@ class BayesianOptimizer:
             for iteration in pbar:
                 next_indices = self.algorithm.select_next_points(X_observed, Y_observed, self.batch_size)
                 
-                batch_results = []
+                batch_values = []
                 for next_idx in next_indices:
                     next_value = float(self.objective_values[next_idx])
                     if next_value > best_value:
                         best_value, best_idx = next_value, next_idx
-                    
-                    batch_results.append({'point': next_idx, 'value': next_value})
+                    batch_values.append(next_value)
                     observed_indices = np.append(observed_indices, next_idx)
                 
                 X_observed = torch.tensor(observed_indices.reshape(-1, 1), dtype=torch.float32, device=self.algorithm.device)
                 Y_observed = torch.tensor(self.objective_values[observed_indices].flatten(), dtype=torch.float32, device=self.algorithm.device)
                 self.algorithm.update(X_observed, Y_observed)
 
-                for batch_idx, batch_result in enumerate(batch_results):
-                    results.append({
-                        'iteration': iteration + 1,
-                        'batch_idx': batch_idx,
-                        'next_point': batch_result['point'],
-                        'next_value': batch_result['value'],
-                        'best_value': best_value,
-                        'best_point': best_idx,
-                        'regret': self.gt_best_value - best_value,
-                        'dataset_size': len(observed_indices)
-                    })
+                results.append({
+                    'iteration': iteration + 1,
+                    'best_value': best_value,
+                    'best_point': best_idx,
+                    'regret': self.gt_best_value - best_value,
+                    'dataset_size': len(observed_indices),
+                    'batch_mean': np.mean(batch_values),      # Optional: batch statistics
+                    'batch_std': np.std(batch_values),        # Optional: batch statistics
+                    'batch_max': np.max(batch_values),        # Optional: best in this batch
+                })
                 
                 pbar.set_postfix({
                     'best': f'{best_value:.4f}',

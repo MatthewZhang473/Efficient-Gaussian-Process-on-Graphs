@@ -33,7 +33,7 @@ class Config:
         self.NUM_BO_ITERATIONS = 50
         self.INITIAL_POINTS = int(1e-3 * self.N_NODES)
         self.BATCH_SIZE = int(1e-3 * self.N_NODES)
-        self.GP_RETRAIN_INTERVAL = 20
+        self.GP_RETRAIN_INTERVAL = 1e-2 * self.N_NODES # Number of training points before retraining the GP
         
         # Random Seeds
         self.DATA_SEED = 42

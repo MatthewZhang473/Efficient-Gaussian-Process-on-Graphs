@@ -1,0 +1,20 @@
+{
+  "timestamp": "20250815_104435",
+  "total_experiments": 300000,
+  "n_nodes": 1000000,
+  "num_bo_iterations": 50,
+  "initial_points": 1000,
+  "batch_size": 1000,
+  "num_bo_runs": 3,
+  "bo_seeds": [
+    100,
+    110,
+    120
+  ],
+  "data_seed": 42,
+  "algorithms": [
+    "random_search",
+    "sparse_grf"
+  ],
+  "ground_truth_best": 3.3127039293871077
+}
