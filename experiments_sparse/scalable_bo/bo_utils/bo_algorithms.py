@@ -10,7 +10,7 @@ class Algorithm(ABC):
         self.n_nodes, self.device = n_nodes, device
     
     @abstractmethod
-    def select_next_points(self, X_observed, Y_observed):
+    def select_next_points(self, X_observed, Y_observed, batch_size):
         pass
     
     @abstractmethod
@@ -22,6 +22,123 @@ class RandomSearch(Algorithm):
         return np.random.choice(self.n_nodes, size=batch_size, replace=False)
     def update(self, X_observed, Y_observed):
         pass
+
+class BFS(Algorithm):
+    def __init__(self, A_sparse, n_nodes, device):
+        super().__init__(n_nodes, device)
+        self.A_sparse = A_sparse
+        self.visited = set()
+        self.frontier = set()
+    
+    def _get_neighbors(self, node):
+        """Get neighbors from sparse adjacency matrix"""
+        row = self.A_sparse.getrow(node)
+        return row.indices.tolist()
+    
+    def select_next_points(self, X_observed, Y_observed, batch_size=1):
+        # Update visited nodes
+        observed_indices = X_observed.cpu().numpy().flatten().astype(int)
+        observed_values = Y_observed.cpu().numpy().flatten()
+        self.visited.update(observed_indices)
+        
+        # If no frontier, start from best observed point
+        if not self.frontier:
+            best_node = observed_indices[np.argmax(observed_values)]
+            neighbors = self._get_neighbors(best_node)
+            self.frontier.update(n for n in neighbors if n not in self.visited)
+        
+        # Remove visited nodes from frontier
+        self.frontier -= self.visited
+        
+        # If frontier is empty, expand from current best points
+        if len(self.frontier) < batch_size:
+            # Get top 3 best points
+            best_indices = np.argsort(observed_values)[-3:]
+            for idx in best_indices:
+                node = observed_indices[idx]
+                neighbors = self._get_neighbors(node)
+                self.frontier.update(n for n in neighbors if n not in self.visited)
+        
+        # Remove visited nodes again
+        self.frontier -= self.visited
+        
+        # Select points from frontier
+        if self.frontier:
+            selected = list(self.frontier)[:batch_size]
+            self.frontier -= set(selected)
+            return selected
+        else:
+            # Fallback to random if no frontier
+            unvisited = set(range(self.n_nodes)) - self.visited
+            if unvisited:
+                return np.random.choice(list(unvisited), min(batch_size, len(unvisited)), replace=False).tolist()
+            else:
+                return np.random.choice(self.n_nodes, batch_size, replace=False).tolist()
+    
+    def update(self, X_observed, Y_observed):
+        # Update visited set
+        observed_indices = X_observed.cpu().numpy().flatten().astype(int)
+        self.visited.update(observed_indices)
+        self.frontier -= self.visited
+    
+class DFS(Algorithm):
+    def __init__(self, A_sparse, n_nodes, device):
+        super().__init__(n_nodes, device)
+        self.A_sparse = A_sparse
+        self.visited = set()
+        self.stack = []  # DFS uses a stack instead of queue
+    
+    def _get_neighbors(self, node):
+        """Get neighbors from sparse adjacency matrix"""
+        row = self.A_sparse.getrow(node)
+        return row.indices.tolist()
+    
+    def select_next_points(self, X_observed, Y_observed, batch_size=1):
+        # Update visited nodes
+        observed_indices = X_observed.cpu().numpy().flatten().astype(int)
+        observed_values = Y_observed.cpu().numpy().flatten()
+        self.visited.update(observed_indices)
+        
+        # If no stack, start from best observed point
+        if not self.stack:
+            best_node = observed_indices[np.argmax(observed_values)]
+            neighbors = self._get_neighbors(best_node)
+            unvisited_neighbors = [n for n in neighbors if n not in self.visited]
+            self.stack.extend(unvisited_neighbors)
+        
+        # Remove visited nodes from stack
+        self.stack = [n for n in self.stack if n not in self.visited]
+        
+        # If stack is empty, expand from current best points
+        if len(self.stack) < batch_size:
+            # Get top 3 best points
+            best_indices = np.argsort(observed_values)[-3:]
+            for idx in best_indices:
+                node = observed_indices[idx]
+                neighbors = self._get_neighbors(node)
+                unvisited_neighbors = [n for n in neighbors if n not in self.visited and n not in self.stack]
+                self.stack.extend(unvisited_neighbors)
+        
+        # Select points from stack (DFS takes from end)
+        if self.stack:
+            selected = []
+            for _ in range(min(batch_size, len(self.stack))):
+                selected.append(self.stack.pop())  # Pop from end for DFS behavior
+            return selected
+        else:
+            # Fallback to random if no stack
+            unvisited = set(range(self.n_nodes)) - self.visited
+            if unvisited:
+                return np.random.choice(list(unvisited), min(batch_size, len(unvisited)), replace=False).tolist()
+            else:
+                return np.random.choice(self.n_nodes, batch_size, replace=False).tolist()
+    
+    def update(self, X_observed, Y_observed):
+        # Update visited set
+        observed_indices = X_observed.cpu().numpy().flatten().astype(int)
+        self.visited.update(observed_indices)
+        # Remove visited nodes from stack
+        self.stack = [n for n in self.stack if n not in self.visited]
 
 class SparseGRF(Algorithm):
     def __init__(self, n_nodes, device, step_matrices, max_walk_length, learning_rate, train_epochs, retrain_interval):
@@ -62,7 +179,7 @@ class SparseGRF(Algorithm):
         self.cached_model, self.cached_likelihood = model, likelihood
         self.last_training_size = len(X_observed)
         return model, likelihood
-    
+
     def select_next_points(self, X_observed, Y_observed, batch_size=1):
         current_size = len(X_observed)
         
@@ -114,7 +231,7 @@ class BayesianOptimizer:
         with tqdm(range(n_iterations), desc=f"    {algorithm_name}", leave=False) as pbar:
             for iteration in pbar:
                 next_indices = self.algorithm.select_next_points(X_observed, Y_observed, self.batch_size)
-                
+
                 batch_values = []
                 for next_idx in next_indices:
                     next_value = float(self.objective_values[next_idx])

@@ -8,7 +8,7 @@ import torch
 from bo_utils import (
     setup_gpytorch_settings, create_directories,
     get_cached_data, get_step_matrices, convert_to_device,
-    RandomSearch, SparseGRF, BayesianOptimizer,
+    RandomSearch, SparseGRF, BFS, DFS, BayesianOptimizer,
     save_results, print_summary
 )
 
@@ -17,7 +17,7 @@ class Config:
     
     def __init__(self):
         # Dataset parameters
-        self.N_NODES = int(1e6)
+        self.N_NODES = int(1e4)
         self.NOISE_STD = 0.1
         
         # Kernel parameters
@@ -31,10 +31,10 @@ class Config:
         
         # BO parameters
         self.NUM_BO_ITERATIONS = 50
-        self.INITIAL_POINTS = int(1e-3 * self.N_NODES)
-        self.BATCH_SIZE = int(1e-3 * self.N_NODES)
-        self.GP_RETRAIN_INTERVAL = 1e-2 * self.N_NODES # Number of training points before retraining the GP
-        
+        self.INITIAL_POINTS = max(int(1e-3 * self.N_NODES), 10)
+        self.BATCH_SIZE = max(int(1e-3 * self.N_NODES), 10)
+        self.GP_RETRAIN_INTERVAL = max(int(1e-2 * self.N_NODES), 50) # Number of training points before retraining the GP
+
         # Random Seeds
         self.DATA_SEED = 42
         self.NUM_BO_RUNS = 3
@@ -67,10 +67,11 @@ def run_experiment(config, data, step_matrices_device, output_device):
                 config.N_NODES, output_device, step_matrices_device, 
                 config.MAX_WALK_LENGTH, config.LEARNING_RATE,
                 config.TRAIN_EPOCHS, config.GP_RETRAIN_INTERVAL
-            )
+            ),
+            'bfs': BFS(data['A_sparse'], config.N_NODES, output_device),
+            'dfs': DFS(data['A_sparse'], config.N_NODES, output_device)
         }
-    
-    for algo_name in ['random_search', 'sparse_grf']:
+    for algo_name in ['random_search','bfs', 'dfs', 'sparse_grf']:
         print(f"\n🔬 Running {algo_name} with {len(config.BO_SEEDS)} seeds...")
         
         for bo_seed_idx, bo_seed in enumerate(config.BO_SEEDS):
@@ -81,7 +82,7 @@ def run_experiment(config, data, step_matrices_device, output_device):
             
             if hasattr(algorithm, 'reset_cache'):
                 algorithm.reset_cache()
-            
+
             optimizer = BayesianOptimizer(algorithm, data['Y'].flatten(), config.INITIAL_POINTS, config.BATCH_SIZE)
             results = optimizer.run_optimization(config.NUM_BO_ITERATIONS, seed=bo_seed, algorithm_name=algo_name.replace('_', ' ').title())
             
