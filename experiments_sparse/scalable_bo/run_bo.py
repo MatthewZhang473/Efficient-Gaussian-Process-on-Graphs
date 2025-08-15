@@ -9,7 +9,7 @@ from bo_utils import (
     setup_gpytorch_settings, create_directories,
     get_cached_data, get_step_matrices, convert_to_device,
     RandomSearch, SparseGRF, BayesianOptimizer,
-    plot_results, save_results, print_summary
+    save_results, print_summary
 )
 
 class Config:
@@ -17,27 +17,27 @@ class Config:
     
     def __init__(self):
         # Dataset parameters
-        self.N_NODES = int(1e4)
+        self.N_NODES = int(1e6)
         self.NOISE_STD = 0.1
         
         # Kernel parameters
         self.WALKS_PER_NODE = 1000
         self.P_HALT = 0.1
-        self.MAX_WALK_LENGTH = 3
+        self.MAX_WALK_LENGTH = 5
         
         # Training parameters
         self.LEARNING_RATE = 0.01
-        self.TRAIN_EPOCHS = 50
+        self.TRAIN_EPOCHS = 20
         
         # BO parameters
-        self.NUM_BO_ITERATIONS = 200
-        self.INITIAL_POINTS = 10
-        self.BATCH_SIZE = 2
-        self.GP_RETRAIN_INTERVAL = 5
+        self.NUM_BO_ITERATIONS = 50
+        self.INITIAL_POINTS = int(1e-3 * self.N_NODES)
+        self.BATCH_SIZE = int(1e-3 * self.N_NODES)
+        self.GP_RETRAIN_INTERVAL = 20
         
         # Random Seeds
         self.DATA_SEED = 42
-        self.NUM_BO_RUNS = 10
+        self.NUM_BO_RUNS = 3
         self.BO_SEEDS = [100 + i * 10 for i in range(self.NUM_BO_RUNS)]
         
         # Data synthesis parameters - remove kernel_std since it's not used

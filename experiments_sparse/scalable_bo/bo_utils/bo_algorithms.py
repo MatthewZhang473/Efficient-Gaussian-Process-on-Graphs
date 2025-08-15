@@ -10,12 +10,18 @@ class Algorithm(ABC):
         self.n_nodes, self.device = n_nodes, device
     
     @abstractmethod
-    def select_next_point(self, X_observed, Y_observed):
+    def select_next_points(self, X_observed, Y_observed):
+        pass
+    
+    @abstractmethod
+    def update(self, X_observed, Y_observed):
         pass
 
 class RandomSearch(Algorithm):
-    def select_next_point(self, X_observed, Y_observed):
-        return np.random.choice(self.n_nodes)
+    def select_next_points(self, X_observed, Y_observed, batch_size=1):
+        return np.random.choice(self.n_nodes, size=batch_size, replace=False)
+    def update(self, X_observed, Y_observed):
+        pass
 
 class SparseGRF(Algorithm):
     def __init__(self, n_nodes, device, step_matrices, max_walk_length, learning_rate, train_epochs, retrain_interval):
@@ -58,32 +64,28 @@ class SparseGRF(Algorithm):
         return model, likelihood
     
     def select_next_points(self, X_observed, Y_observed, batch_size=1):
-        try:
-            current_size = len(X_observed)
-            
-            if self._should_retrain(current_size):
-                model, likelihood = self._train_model(X_observed, Y_observed)
-            else:
-                model, likelihood = self.cached_model, self.cached_likelihood
-            
-            model.eval()
-            likelihood.eval()
-            
-            X_all = torch.arange(self.n_nodes, dtype=torch.float32, device=self.device).unsqueeze(1)
-            
-            selected_indices = []
-            with torch.no_grad():
-                for _ in range(batch_size):
-                    thompson_samples = model.predict(X_all, n_samples=1)
-                    next_idx = torch.argmax(thompson_samples[0, :]).item()
-                    selected_indices.append(next_idx)
-            
-            return selected_indices
-        except Exception:
-            return [np.random.choice(self.n_nodes) for _ in range(batch_size)]
-    
-    def select_next_point(self, X_observed, Y_observed):
-        return self.select_next_points(X_observed, Y_observed, batch_size=1)[0]
+        current_size = len(X_observed)
+        
+        if self._should_retrain(current_size):
+            model, likelihood = self._train_model(X_observed, Y_observed)
+        else:
+            model, likelihood = self.cached_model, self.cached_likelihood
+        
+        model.eval()
+        likelihood.eval()
+        
+        X_all = torch.arange(self.n_nodes, dtype=torch.float32, device=self.device).unsqueeze(1)
+        
+        selected_indices = []
+        with torch.no_grad():
+            thompson_samples = model.predict(X_all, n_samples=1)
+            selected_indices = torch.topk(thompson_samples[0, :], batch_size).indices.tolist()
+        
+        return selected_indices
+
+    def update(self, X_observed, Y_observed):
+        self.cached_model.x_train = X_observed
+        self.cached_model.y_train = Y_observed
 
 class BayesianOptimizer:
     def __init__(self, algorithm, objective_values, initial_points=10, batch_size=1):
@@ -108,12 +110,9 @@ class BayesianOptimizer:
         best_value = float(Y_observed.max())
         best_idx = observed_indices[torch.argmax(Y_observed).item()]
         
-        with tqdm(range(n_iterations), desc=f"    {algorithm_name}", leave=False, miniters=10) as pbar:
+        with tqdm(range(n_iterations), desc=f"    {algorithm_name}", leave=False) as pbar:
             for iteration in pbar:
-                if hasattr(self.algorithm, 'select_next_points') and self.batch_size > 1:
-                    next_indices = self.algorithm.select_next_points(X_observed, Y_observed, self.batch_size)
-                else:
-                    next_indices = [self.algorithm.select_next_point(X_observed, Y_observed)]
+                next_indices = self.algorithm.select_next_points(X_observed, Y_observed, self.batch_size)
                 
                 batch_results = []
                 for next_idx in next_indices:
@@ -126,7 +125,8 @@ class BayesianOptimizer:
                 
                 X_observed = torch.tensor(observed_indices.reshape(-1, 1), dtype=torch.float32, device=self.algorithm.device)
                 Y_observed = torch.tensor(self.objective_values[observed_indices].flatten(), dtype=torch.float32, device=self.algorithm.device)
-                
+                self.algorithm.update(X_observed, Y_observed)
+
                 for batch_idx, batch_result in enumerate(batch_results):
                     results.append({
                         'iteration': iteration + 1,
