@@ -1,0 +1,9 @@
+{
+  "timestamp": "20250816_011004",
+  "graph_type": "grid",
+  "total_experiments": 750,
+  "n_nodes": 1000000,
+  "n_edges": null,
+  "avg_degree": null,
+  "n_peaks": 10
+}
