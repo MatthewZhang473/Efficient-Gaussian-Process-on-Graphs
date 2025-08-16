@@ -32,7 +32,7 @@ class BFS(Algorithm):
     
     def _get_neighbors(self, node):
         """Get neighbors from sparse adjacency matrix"""
-        row = self.A_sparse.getrow(node)
+        row = self.A_sparse._getrow(node)
         return row.indices.tolist()
     
     def select_next_points(self, X_observed, Y_observed, batch_size=1):
