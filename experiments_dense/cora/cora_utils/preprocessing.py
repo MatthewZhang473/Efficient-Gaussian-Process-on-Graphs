@@ -13,7 +13,7 @@ import geopandas as gpd
 
 def load_cora(num_train, num_test):
     #unzip data
-    with zipfile.ZipFile('data/cora.zip', 'r') as zip_ref:
+    with zipfile.ZipFile('/scratches/cartwright/mz473/Efficient-Gaussian-Process-on-Graphs/experiments_dense/cora/data/cora.zip', 'r') as zip_ref:
         zip_ref.extractall('data')
     # data reading
     data_dir = 'data/cora'
