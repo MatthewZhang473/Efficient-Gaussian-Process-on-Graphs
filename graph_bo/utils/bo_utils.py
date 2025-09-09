@@ -44,10 +44,8 @@ class BFS(Algorithm):
         return row.indices.tolist()
     
     def select_next_points(self, X_observed, Y_observed, batch_size=1):
-        # Update visited nodes
         observed_indices = X_observed.cpu().numpy().flatten().astype(int)
         observed_values = Y_observed.cpu().numpy().flatten()
-        self.visited.update(observed_indices)
         
         # If queue is empty, start from a random visited node
         if not self.queue:
@@ -109,10 +107,8 @@ class DFS(Algorithm):
         return row.indices.tolist()
     
     def select_next_points(self, X_observed, Y_observed, batch_size=1):
-        # Update visited nodes
         observed_indices = X_observed.cpu().numpy().flatten().astype(int)
         observed_values = Y_observed.cpu().numpy().flatten()
-        self.visited.update(observed_indices)
         
         # If stack is empty, start from a random visited node
         if not self.stack:
@@ -173,10 +169,8 @@ class GreedySearch(Algorithm):
         return row.indices.tolist()
     
     def select_next_points(self, X_observed, Y_observed, batch_size=1):
-        # Update visited nodes
         observed_indices = X_observed.cpu().numpy().flatten().astype(int)
         observed_values = Y_observed.cpu().numpy().flatten()
-        self.visited.update(observed_indices)
         
         # If no frontier, start from best observed point
         if not self.frontier:
@@ -227,6 +221,7 @@ class SparseGRF(Algorithm):
         self.cached_model = None
         self.cached_likelihood = None
         self.last_training_size = 0
+        self.visited = set()
     
     def reset_cache(self):
         self.cached_model = None
@@ -260,6 +255,7 @@ class SparseGRF(Algorithm):
         return model, likelihood
 
     def select_next_points(self, X_observed, Y_observed, batch_size=1):
+        observed_indices = X_observed.cpu().numpy().flatten().astype(int)
         current_size = len(X_observed)
         if self._should_retrain(current_size):
             tqdm.write(f"      Retraining GP with {current_size} points...")
@@ -270,15 +266,18 @@ class SparseGRF(Algorithm):
         model.eval()
         likelihood.eval()
         
-        # Thompson sampling
-        X_all = torch.arange(self.n_nodes, dtype=torch.float32, device=self.device).unsqueeze(1)
+        unvisited_nodes = list(set(range(self.n_nodes)) - self.visited)
+        X_unvisited = torch.tensor(unvisited_nodes, dtype=torch.float32, device=self.device).unsqueeze(1)
         with torch.no_grad():
-            thompson_samples = model.predict(X_all, n_samples=1)
-            selected_indices = torch.topk(thompson_samples[0, :], batch_size).indices.tolist()
-        
+            thompson_samples = model.predict(X_unvisited, n_samples=1)  # shape (1, n_unvisited)
+            topk = torch.topk(thompson_samples[0, :], batch_size)
+            selected_indices = [unvisited_nodes[idx] for idx in topk.indices.tolist()]
+
         return selected_indices
 
     def update(self, X_observed, Y_observed):
+        observed_indices = X_observed.cpu().numpy().flatten().astype(int)
+        self.visited.update(observed_indices)
         self.cached_model.x_train = X_observed
         self.cached_model.y_train = Y_observed
 
