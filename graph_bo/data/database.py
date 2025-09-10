@@ -12,11 +12,18 @@ import warnings
 class GraphDataLoader:
     """Database class for loading and caching graph datasets."""
     
-    def __init__(self, data_root="../../experiments_sparse/social_networks", cache_dir=None):
-        # Set default cache directory relative to this module's location
+    def __init__(self, data_root="raw_data", cache_dir=None):
+        # Set default cache directory at the same level as data_root
         if cache_dir is None:
-            module_dir = os.path.dirname(os.path.abspath(__file__))
-            cache_dir = os.path.join(module_dir, "processed_data")
+            cache_dir = "processed_data"
+        
+        # Handle relative paths - if data_root doesn't exist, try going up one level
+        if not os.path.exists(data_root) and not os.path.isabs(data_root):
+            parent_data_root = os.path.join("..", data_root)
+            if os.path.exists(parent_data_root):
+                data_root = parent_data_root
+                # Also adjust cache_dir to be at the same level
+                cache_dir = os.path.join("..", cache_dir)
         
         self.data_root = data_root
         self.cache_dir = cache_dir
@@ -31,24 +38,46 @@ class GraphDataLoader:
             'facebook': {
                 'edges_file': 'facebook_large/musae_facebook_edges.csv',
                 'targets_file': 'facebook_large/musae_facebook_target.csv',
-                'loader': self._load_facebook
+                'loader': self._load_facebook,
+                'type': 'social_networks'
             },
             'youtube': {
                 'graph_file': 'com-youtube.ungraph.txt.gz',
-                'loader': self._load_youtube
+                'loader': self._load_youtube,
+                'type': 'social_networks'
             },
             'twitch': {
                 'edges_file': 'large_twitch_edges.csv',
                 'features_file': 'large_twitch_features.csv',
-                'loader': self._load_twitch
+                'loader': self._load_twitch,
+                'type': 'social_networks'
             },
             'enron': {
                 'graph_file': 'email-Enron.txt.gz',
-                'loader': self._load_enron
+                'loader': self._load_enron,
+                'type': 'social_networks'
+            },
+            '500hpa': {
+                'data_file': 'wind_data_processed_500hPa.npz',
+                'loader': self._load_wind_data,
+                'type': 'wind_interpolation',
+                'subdir': '500hPa'
+            },
+            '800hpa': {
+                'data_file': 'wind_data_processed_800hPa.npz',
+                'loader': self._load_wind_data,
+                'type': 'wind_interpolation',
+                'subdir': '800hPa'
+            },
+            '1000hpa': {
+                'data_file': 'wind_data_processed_1000hPa.npz',
+                'loader': self._load_wind_data,
+                'type': 'wind_interpolation',
+                'subdir': '1000hPa'
             }
         }
-    
-    def __call__(self, dataset_name: str, force_reload: bool = False) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
+
+    def __call__(self, dataset_name: str, dataset_type: str = None, force_reload: bool = False) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
         """
         Load dataset with caching.
         
@@ -57,7 +86,9 @@ class GraphDataLoader:
             force_reload: Force reload from source files
             
         Returns:
-            Tuple of (adjacency_matrix, node_indices, node_degrees)
+            For all datasets: Tuple of (adjacency_matrix, node_indices, target_values)
+            - Graph datasets: target_values = node_degrees
+            - Wind datasets: target_values = wind_speed_magnitudes
         """
         if dataset_name not in self.dataset_configs:
             available = list(self.dataset_configs.keys())
@@ -77,7 +108,7 @@ class GraphDataLoader:
         
         # Load from source and cache
         print(f"Loading {dataset_name} from source files...")
-        data = self._load_from_source(dataset_name)
+        data = self._load_from_source(dataset_name, dataset_type)
         
         # Save to disk cache
         self._save_to_cache(data, cache_path, dataset_name)
@@ -87,15 +118,30 @@ class GraphDataLoader:
         
         return data
     
-    def _load_from_source(self, dataset_name: str) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
+    def _load_from_source(self, dataset_name: str, dataset_type: str = None) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
         """Load dataset from source files."""
         config = self.dataset_configs[dataset_name]
-        dataset_path = os.path.join(self.data_root, dataset_name)
         
+        if dataset_type:
+            dataset_path = os.path.join(self.data_root, dataset_type, dataset_name)
+        else:
+            # For wind datasets, use the specific subdirectory structure
+            if 'subdir' in config:
+                dataset_path = os.path.join(self.data_root, config['type'], config['subdir'])
+            else:
+                # For regular datasets, try type subdirectory first, then direct
+                dataset_type = config.get('type', '')
+                if dataset_type:
+                    dataset_path = os.path.join(self.data_root, dataset_type, dataset_name)
+                    if not os.path.exists(dataset_path):
+                        dataset_path = os.path.join(self.data_root, dataset_name)
+                else:
+                    dataset_path = os.path.join(self.data_root, dataset_name)
+
         # Check if dataset directory exists
         if not os.path.exists(dataset_path):
             raise FileNotFoundError(f"Dataset directory not found: {dataset_path}")
-        
+
         # Call the appropriate loader
         return config['loader'](dataset_path)
     
@@ -193,35 +239,82 @@ class GraphDataLoader:
         
         return adjacency_matrix, X, y
     
+    def _load_wind_data(self, dataset_path: str) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
+        """Load wind interpolation dataset."""
+        # Find the dataset name by looking up which config has this path
+        dataset_name = None
+        for name, config in self.dataset_configs.items():
+            if config.get('loader') == self._load_wind_data:
+                expected_path = os.path.join(self.data_root, config['type'], config['subdir'])
+                if expected_path == dataset_path:
+                    dataset_name = name
+                    break
+        
+        if dataset_name is None:
+            # Fallback: extract from path
+            dataset_name = os.path.basename(dataset_path).lower() + 'hpa'
+        
+        config = self.dataset_configs[dataset_name]
+        
+        # The exact path structure: wind_interpolation/500hPa/wind_data_processed_500hPa.npz
+        data_file_path = os.path.join(dataset_path, config['data_file'])
+        
+        if not os.path.exists(data_file_path):
+            raise FileNotFoundError(f"Wind data file not found: {data_file_path}")
+        
+        # Load the processed wind data
+        data = np.load(data_file_path)
+        
+        # Reconstruct sparse adjacency matrix
+        A_data = data['A_data']
+        A_indices = data['A_indices']
+        A_indptr = data['A_indptr']
+        A_shape = data['A_shape']
+        adjacency_matrix = csr_matrix((A_data, A_indices, A_indptr), shape=A_shape)
+        
+        # Load node indices (consistent with social network datasets)
+        X = data['X']  # shape (num_nodes,) - node indices [0, 1, 2, ...]
+        
+        # Load wind speed magnitudes (consistent target format)
+        y = data['y']  # shape (num_nodes,) - wind speed magnitudes
+        
+        return adjacency_matrix, X, y
+    
     def _load_from_cache(self, cache_path: str) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
         """Load dataset from cache file."""
         with open(cache_path, 'rb') as f:
             data = pickle.load(f)
         
-        return data['adjacency_matrix'], data['node_indices'], data['node_degrees']
+        return data['adjacency_matrix'], data['node_indices'], data['target_data']
     
     def _save_to_cache(self, data: Tuple[csr_matrix, np.ndarray, np.ndarray], cache_path: str, dataset_name: str):
         """Save dataset to cache file."""
         adjacency_matrix, X, y = data
         
+        # All datasets now have consistent format: (adjacency, node_indices, target_values)
         cache_data = {
             'adjacency_matrix': adjacency_matrix,
             'node_indices': X,
-            'node_degrees': y,
+            'target_data': y,  # node degrees for graphs, wind speeds for wind datasets
             'num_nodes': len(X),
             'num_edges': adjacency_matrix.nnz // 2,
             'density': adjacency_matrix.nnz / (adjacency_matrix.shape[0] * adjacency_matrix.shape[1]),
-            'dataset_name': dataset_name
+            'dataset_name': dataset_name,
+            'data_type': 'wind' if dataset_name in ['500hpa', '800hpa', '1000hpa'] else 'graph'
         }
-        
-        with open(cache_path, 'wb') as f:
-            pickle.dump(cache_data, f)
         
         print(f"Cached {dataset_name}:")
         print(f"  Nodes: {cache_data['num_nodes']}")
         print(f"  Edges: {cache_data['num_edges']}")
         print(f"  Density: {cache_data['density']:.6f}")
-        print(f"  Degree range: {y.min()} to {y.max()}")
+        
+        if dataset_name in ['500hpa', '800hpa', '1000hpa']:
+            print(f"  Wind speed range: {y.min():.2f} to {y.max():.2f} m/s")
+        else:
+            print(f"  Degree range: {y.min()} to {y.max()}")
+        
+        with open(cache_path, 'wb') as f:
+            pickle.dump(cache_data, f)
     
     def list_available_datasets(self) -> list:
         """Return list of available datasets."""
