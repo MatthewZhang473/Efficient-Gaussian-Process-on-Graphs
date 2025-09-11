@@ -2,6 +2,12 @@
 
 In this folder we re-implement Bayes Optimization (BO) on graphs.
 
+
+
+## Commands:
+
+    python graph_bo/scripts/run_graph_bo.py --config graph_bo/configs/wind_magnitude.yaml 2>&1 | tee graph_bo/logs/wind_magnitude_log_$(date +%Y%m%d_%H%M%S).log
+
 ## High Level Design
 
 ### Data 

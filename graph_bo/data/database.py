@@ -356,6 +356,3 @@ class GraphDataLoader:
                         os.remove(os.path.join(self.cache_dir, file))
             self._cache.clear()
             print("Cleared all cache")
-
-# Create global instance
-graph_data_loader = GraphDataLoader()

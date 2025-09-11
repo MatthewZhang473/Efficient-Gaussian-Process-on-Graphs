@@ -75,13 +75,12 @@ class GraphPreprocessor:
     def _generate_cache_filename(self) -> str:
         """Generate a cache filename based on graph and parameter hash."""
         # Create hash of adjacency matrix and parameters
-        # adj_hash = hashlib.md5(self.adj_matrix.data.tobytes() + 
-        #                       self.adj_matrix.indices.tobytes() + 
-        #                       self.adj_matrix.indptr.tobytes()).hexdigest()[:8]
-        # graph_size = self.adj_matrix.shape[0]
-        # params = f"{graph_size}_{self.walks_per_node}_{self.p_halt}_{self.max_walk_length}_{self.random_walk_seed}"
-        # return f"experiments_sparse/step_matrices/step_matrices_{adj_hash}_{params}.pkl"
-        raise NotImplementedError("Please provide a cache_filename or implement _generate_cache_filename method.")
+        adj_hash = hashlib.md5(self.adj_matrix.data.tobytes() + 
+                              self.adj_matrix.indices.tobytes() + 
+                              self.adj_matrix.indptr.tobytes()).hexdigest()[:8]
+        graph_size = self.adj_matrix.shape[0]
+        params = f"{graph_size}_{self.walks_per_node}_{self.p_halt}_{self.max_walk_length}_{self.random_walk_seed}"
+        return f"experiments_sparse/step_matrices/step_matrices_{adj_hash}_{params}.pkl"
 
     def preprocess_graph(self, save_to_disk: bool = False) -> List[SparseLinearOperator]:
         """

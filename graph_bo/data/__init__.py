@@ -1,3 +1,3 @@
-from .database import GraphDataLoader, graph_data_loader
+from .database import GraphDataLoader
 
-__all__ = ['GraphDataLoader', 'graph_data_loader']
+__all__ = ['GraphDataLoader']

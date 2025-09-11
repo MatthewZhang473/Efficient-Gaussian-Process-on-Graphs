@@ -19,7 +19,8 @@ from tqdm import tqdm
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(project_root)
 sys.path.append(os.path.join(project_root, 'graph_bo'))
-from graph_bo.data import graph_data_loader
+from graph_bo.data.database import GraphDataLoader
+graph_data_loader = GraphDataLoader(data_root="graph_bo/data/raw_data", cache_dir="graph_bo/data/processed_data")
 from graph_bo.utils import (
     RandomSearch, SparseGRF, BFS, DFS, GreedySearch, BayesianOptimizer,
     setup_gpytorch_settings, 
