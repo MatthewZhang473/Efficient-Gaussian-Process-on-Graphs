@@ -9,7 +9,6 @@ import numpy as np
 import gpflow, networkx as nx, pandas as pd
 from tqdm import tqdm
 
-
 warnings.filterwarnings('ignore')
 
 # ----------------------------
@@ -71,19 +70,24 @@ def run_experiment(adjacency_matrix, X, Y, Y_noisy, seed):
     results = []
 
     # Diffusion kernel
+    print("  Running Diffusion kernel...", flush=True)
     try:
         graph_kernel = GraphDiffusionKernel(adjacency_matrix)
         model, mean, lml = gp_inference(X_train, Y_train, X_full, graph_kernel)
         mse = np.mean((Y[test_idx] - mean.numpy()[test_idx].flatten())**2)
         results.append({'seed': seed, 'model': 'Diffusion', 'wpn': None, 'lml': lml, 'mse': mse})
+        print(f"    Diffusion - LML: {lml:.3f}, MSE: {mse:.6f}", flush=True)
     except Exception as e:
+        print(f"    Diffusion failed: {e}", flush=True)
         results.append({'seed': seed, 'model': 'Diffusion', 'wpn': None, 'lml': np.nan, 'mse': np.nan, 'error': str(e)})
     finally:
         clear_gpu_memory()
 
     # GRF kernels
-    for wpn in CONFIG["wpns"]:
+    for wpn in tqdm(CONFIG["wpns"], desc=f"    GRF wpns (seed={seed})", leave=False):
         for ablation in CONFIG["ablation_flags"]:
+            model_name = 'GRF-ablation' if ablation else 'GRF'
+            print(f"      Running {model_name}, wpn={wpn}...", flush=True)
             try:
                 graph_kernel = GraphGeneralFastGRFKernel(
                     adjacency_matrix,
@@ -95,22 +99,11 @@ def run_experiment(adjacency_matrix, X, Y, Y_noisy, seed):
                 )
                 model, mean, lml = gp_inference(X_train, Y_train, X_full, graph_kernel)
                 mse = np.mean((Y[test_idx] - mean.numpy()[test_idx].flatten())**2)
-                results.append({
-                    'seed': seed,
-                    'model': 'GRF-ablation' if ablation else 'GRF',
-                    'wpn': wpn,
-                    'lml': lml,
-                    'mse': mse
-                })
+                results.append({'seed': seed, 'model': model_name, 'wpn': wpn, 'lml': lml, 'mse': mse})
+                print(f"        {model_name} - LML: {lml:.3f}, MSE: {mse:.6f}", flush=True)
             except Exception as e:
-                results.append({
-                    'seed': seed,
-                    'model': 'GRF-ablation' if ablation else 'GRF',
-                    'wpn': wpn,
-                    'lml': np.nan,
-                    'mse': np.nan,
-                    'error': str(e)
-                })
+                print(f"        {model_name} failed for wpn={wpn}: {e}", flush=True)
+                results.append({'seed': seed, 'model': model_name, 'wpn': wpn, 'lml': np.nan, 'mse': np.nan, 'error': str(e)})
             finally:
                 clear_gpu_memory()
 
@@ -123,7 +116,7 @@ def parent_main():
     all_dfs = []
     for seed in tqdm(CONFIG["seeds"], desc="Seeds"):
         print(f"\nRunning seed {seed} in subprocess...")
-        subprocess.run([sys.executable, __file__, str(seed)], check=True)
+        subprocess.run([sys.executable, "-u", __file__, str(seed)], check=True)
         df = pd.read_csv(f"results_seed_{seed}.csv")
         all_dfs.append(df)
 
