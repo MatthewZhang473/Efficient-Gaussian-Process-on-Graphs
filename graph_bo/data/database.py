@@ -74,6 +74,24 @@ class GraphDataLoader:
                 'loader': self._load_wind_data,
                 'type': 'wind_interpolation',
                 'subdir': '1000hPa'
+            },
+            '500hpa_wide': {
+                'data_file': 'wind_data_processed_500hPa_wide.npz',
+                'loader': self._load_wind_data,
+                'type': 'wind_interpolation',
+                'subdir': '500hPa_wide'
+            },
+            '800hpa_wide': {
+                'data_file': 'wind_data_processed_800hPa_wide.npz',
+                'loader': self._load_wind_data,
+                'type': 'wind_interpolation',
+                'subdir': '800hPa_wide'
+            },
+            '1000hpa_wide': {
+                'data_file': 'wind_data_processed_1000hPa_wide.npz',
+                'loader': self._load_wind_data,
+                'type': 'wind_interpolation',
+                'subdir': '1000hPa_wide'
             }
         }
 
