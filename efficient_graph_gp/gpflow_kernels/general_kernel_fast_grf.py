@@ -17,6 +17,7 @@ class GraphGeneralFastGRFKernel(gpflow.kernels.Kernel):
         modulator_vector: np.ndarray = None,
         step_matrices: np.ndarray = None,  # NEW: pre-computed step matrices
         use_tqdm: bool = False,
+        ablation: bool = False,
         **kwargs
     ):
         super().__init__(**kwargs)
@@ -42,6 +43,12 @@ class GraphGeneralFastGRFKernel(gpflow.kernels.Kernel):
         # Handle step matrices - either load pre-computed or compute new ones
         if step_matrices is not None:
             self.feature_matrices_tf = tf.constant(step_matrices, dtype=tf.float64)
+        elif ablation:
+            graph = Graph(adjacency_matrix)
+            random_walk = RandomWalk(graph, seed=random_walk_seed)
+            self.feature_matrices_tf = tf.constant(
+                random_walk.get_random_walk_matrices(walks_per_node, p_halt, max_walk_length, use_tqdm=use_tqdm, ablation=ablation), dtype=tf.float64
+            )
         else:
             # Precompute random walk feature matrices
             self.laplacian = get_normalized_laplacian(adjacency_matrix)

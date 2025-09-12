@@ -80,7 +80,7 @@ class RandomWalk:
         self.rng = np.random.default_rng(seed)
         self.seed = seed or 42
 
-    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False, n_processes=None):
+    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False, n_processes=None, ablation=False):
         """
         Perform multiple random walks for each node in the graph as a starting point.
         Returns a NumPy array of shape (num_nodes, num_nodes, max_walk_length).
@@ -92,7 +92,7 @@ class RandomWalk:
         
         # If single process or small graph, use original sequential implementation
         if n_processes == 1 or num_nodes < n_processes * 2:
-            return self._sequential_walks(num_walks, p_halt, max_walk_length, use_tqdm)
+            return self._sequential_walks(num_walks, p_halt, max_walk_length, use_tqdm, ablation)
         
         # Split nodes among processes
         chunks = np.array_split(np.arange(num_nodes), n_processes)
@@ -124,7 +124,7 @@ class RandomWalk:
         # Build final 3D array from accumulated results
         return self._build_matrices_from_accumulators(step_accumulators, num_walks, num_nodes, max_walk_length)
     
-    def _sequential_walks(self, num_walks, p_halt, max_walk_length, use_tqdm):
+    def _sequential_walks(self, num_walks, p_halt, max_walk_length, use_tqdm, ablation=False):
         """Original sequential implementation."""
         num_nodes = self.graph.get_num_nodes()
         step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
@@ -149,7 +149,10 @@ class RandomWalk:
                     # Pick random neighbor
                     next_node = self.rng.choice(neighbors)
                     weight = self.graph.get_edge_weight(current_node, next_node)
-                    load *= degree * weight / (1 - p_halt)
+                    if ablation:
+                        load = weight
+                    else:
+                        load = degree * weight / (1 - p_halt)
                     current_node = next_node
         
         return self._build_matrices_from_accumulators(step_accumulators, num_walks, num_nodes, max_walk_length)
