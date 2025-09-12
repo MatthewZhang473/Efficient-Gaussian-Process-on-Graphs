@@ -49,8 +49,13 @@ def run_experiment(dataset_name, algorithms, config):
     print_dataset_info(dataset_name, A, X, y)
     
     # Normalize targets, first take log, then gaussianize
-    y_logged = np.log(y+1e-6)
-    y_normalized = (y_logged - y_logged.mean()) / y_logged.std()
+    
+    #### Social Networks: Log + Gaussianize
+    # y_logged = np.log(y+1e-6)
+    # y_normalized = (y_logged - y_logged.mean()) / y_logged.std()
+    
+    #### Wind Magnitude: Just Gaussianize
+    y_normalized = (y - y.mean()) / y.std()
     gt_best_value = float(y_normalized.max())
 
     device = get_device()
