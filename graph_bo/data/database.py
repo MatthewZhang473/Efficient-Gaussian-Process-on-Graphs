@@ -92,6 +92,30 @@ class GraphDataLoader:
                 'loader': self._load_wind_data,
                 'type': 'wind_interpolation',
                 'subdir': '1000hPa_wide'
+            },
+            'single_modal': {
+                'data_file': 'synthetic_single_modal_1000x1000.npz',
+                'loader': self._load_synthetic_data,
+                'type': 'synthetic',
+                'subdir': 'single_modal'
+            },
+            'multi_modal': {
+                'data_file': 'synthetic_multimodal_1000x1000.npz',
+                'loader': self._load_synthetic_data,
+                'type': 'synthetic',
+                'subdir': 'multi-modal'
+            },
+            'community': {
+                'data_file': 'synthetic_community_10k.npz',
+                'loader': self._load_synthetic_data,
+                'type': 'synthetic',
+                'subdir': 'community'
+            },
+            'circular': {
+                'data_file': 'synthetic_circular_10k.npz',
+                'loader': self._load_synthetic_data,
+                'type': 'synthetic',
+                'subdir': 'circular'
             }
         }
 
@@ -298,6 +322,47 @@ class GraphDataLoader:
         
         return adjacency_matrix, X, y
     
+    def _load_synthetic_data(self, dataset_path: str) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
+        """Load synthetic dataset."""
+        # Find the dataset name by looking up which config has this path
+        dataset_name = None
+        for name, config in self.dataset_configs.items():
+            if config.get('loader') == self._load_synthetic_data:
+                expected_path = os.path.join(self.data_root, config['type'], config['subdir'])
+                if expected_path == dataset_path:
+                    dataset_name = name
+                    break
+        
+        if dataset_name is None:
+            # Fallback: extract from path
+            dataset_name = os.path.basename(dataset_path)
+        
+        config = self.dataset_configs[dataset_name]
+        
+        # The path structure: synthetic/single_modal/synthetic_single_modal_1000x1000.npz
+        data_file_path = os.path.join(dataset_path, config['data_file'])
+        
+        if not os.path.exists(data_file_path):
+            raise FileNotFoundError(f"Synthetic data file not found: {data_file_path}")
+        
+        # Load the processed synthetic data
+        data = np.load(data_file_path, allow_pickle=True)
+        
+        # Reconstruct sparse adjacency matrix
+        A_data = data['A_data']
+        A_indices = data['A_indices']
+        A_indptr = data['A_indptr']
+        A_shape = data['A_shape']
+        adjacency_matrix = csr_matrix((A_data, A_indices, A_indptr), shape=A_shape)
+        
+        # Load node indices (consistent with other datasets)
+        X = data['X']  # shape (num_nodes,) - node indices [0, 1, 2, ...]
+        
+        # Load synthetic function values (normalized)
+        y = data['y']  # shape (num_nodes,) - synthetic function values
+        
+        return adjacency_matrix, X, y
+    
     def _load_from_cache(self, cache_path: str) -> Tuple[csr_matrix, np.ndarray, np.ndarray]:
         """Load dataset from cache file."""
         with open(cache_path, 'rb') as f:
@@ -310,15 +375,23 @@ class GraphDataLoader:
         adjacency_matrix, X, y = data
         
         # All datasets now have consistent format: (adjacency, node_indices, target_values)
+        # Determine data type
+        if dataset_name in ['500hpa', '800hpa', '1000hpa', '500hpa_wide', '800hpa_wide', '1000hpa_wide']:
+            data_type = 'wind'
+        elif dataset_name in ['single_modal', 'multi_modal', 'community', 'circular']:
+            data_type = 'synthetic'
+        else:
+            data_type = 'graph'
+            
         cache_data = {
             'adjacency_matrix': adjacency_matrix,
             'node_indices': X,
-            'target_data': y,  # node degrees for graphs, wind speeds for wind datasets
+            'target_data': y,  # node degrees for graphs, wind speeds for wind, function values for synthetic
             'num_nodes': len(X),
             'num_edges': adjacency_matrix.nnz // 2,
             'density': adjacency_matrix.nnz / (adjacency_matrix.shape[0] * adjacency_matrix.shape[1]),
             'dataset_name': dataset_name,
-            'data_type': 'wind' if dataset_name in ['500hpa', '800hpa', '1000hpa'] else 'graph'
+            'data_type': data_type
         }
         
         print(f"Cached {dataset_name}:")
@@ -326,8 +399,10 @@ class GraphDataLoader:
         print(f"  Edges: {cache_data['num_edges']}")
         print(f"  Density: {cache_data['density']:.6f}")
         
-        if dataset_name in ['500hpa', '800hpa', '1000hpa']:
-            print(f"  Wind speed range: {y.min():.2f} to {y.max():.2f} m/s")
+        if data_type == 'wind':
+            print(f"  Wind speed range: {y.min():.3f} to {y.max():.3f} (normalized)")
+        elif data_type == 'synthetic':
+            print(f"  Function value range: {y.min():.3f} to {y.max():.3f} (normalized)")
         else:
             print(f"  Degree range: {y.min()} to {y.max()}")
         
