@@ -105,6 +105,12 @@ class GraphDataLoader:
                 'type': 'synthetic',
                 'subdir': 'multi-modal'
             },
+            'bimodal': {
+                'data_file': 'synthetic_bimodal_100x100.npz',
+                'loader': self._load_synthetic_data,
+                'type': 'synthetic',
+                'subdir': 'bimodal'
+            },
             'community': {
                 'data_file': 'synthetic_community_10k.npz',
                 'loader': self._load_synthetic_data,
@@ -378,7 +384,7 @@ class GraphDataLoader:
         # Determine data type
         if dataset_name in ['500hpa', '800hpa', '1000hpa', '500hpa_wide', '800hpa_wide', '1000hpa_wide']:
             data_type = 'wind'
-        elif dataset_name in ['single_modal', 'multi_modal', 'community', 'circular']:
+        elif dataset_name in ['single_modal', 'multi_modal', 'bimodal', 'community', 'circular']:
             data_type = 'synthetic'
         else:
             data_type = 'graph'
