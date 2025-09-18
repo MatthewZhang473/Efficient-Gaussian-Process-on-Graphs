@@ -70,23 +70,23 @@ def load_cora(num_train, num_test):
 
 def load_PEMS(num_train=250, dtype=np.float64):
     #unzip daata
-    with zipfile.ZipFile('data/PEMS.zip', 'r') as zip_ref:
+    with zipfile.ZipFile('experiments_dense/traffic_dataset/data/PEMS.zip', 'r') as zip_ref:
         zip_ref.extractall('data')
     # Data reading
-    with open('data/PEMS/adj_mx_bay.pkl', 'rb') as f:
+    with open('experiments_dense/traffic_dataset/data/PEMS/adj_mx_bay.pkl', 'rb') as f:
         sensor_ids, sensor_id_to_ind, _ = pickle.load(f, encoding='latin1')
-    all_signals = pd.read_hdf('data/PEMS/pems-bay.h5')
-    coords = pd.read_csv('data/PEMS/graph_sensor_locations_bay.csv', header=None)
+    all_signals = pd.read_hdf('experiments_dense/traffic_dataset/data/PEMS/pems-bay.h5')
+    coords = pd.read_csv('experiments_dense/traffic_dataset/data/PEMS/graph_sensor_locations_bay.csv', header=None)
 
     # Loading real world graph of roads
     north, south, east, west = 37.450, 37.210, -121.80, -122.10
-    if not os.path.isfile('data/PEMS/bay_graph.pkl'):
+    if not os.path.isfile('experiments_dense/traffic_dataset/data/PEMS/bay_graph.pkl'):
         cf = '["highway"~"motorway|motorway_link"]'  # Road filter, we don't use small ones.
         G = osmnx.graph_from_bbox(north=north, south=south, east=east, west=west, simplify=True, custom_filter=cf)
-        with open('data/PEMS/bay_graph.pkl', 'wb') as f:  # frequent loading of maps leads to a temporal ban
+        with open('experiments_dense/traffic_dataset/data/PEMS/bay_graph.pkl', 'wb') as f:  # frequent loading of maps leads to a temporal ban
             pickle.dump(G, f)
     else:
-        with open('data/PEMS/bay_graph.pkl', 'rb') as f:
+        with open('experiments_dense/traffic_dataset/data/PEMS/bay_graph.pkl', 'rb') as f:
             G = pickle.load(f)
 
     G = osmnx.convert.to_undirected(G)  # Matern GP supports only undirected graphs.
