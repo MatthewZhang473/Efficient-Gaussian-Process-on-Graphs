@@ -22,15 +22,15 @@ CONFIG = {
     "run_diffusion": False,
     "run_grf": False,
     "run_agrf": False,
-    "run_gnn": True,
+    "run_gnn": False,
 }
 
 RESULTS_DIR = "experiments_dense/traffic_dataset/results"
 
 # Configuration for SVGP
 SVGP_CONFIG = {
-    "num_inducing": 50,
-    "num_iterations": 500,
+    "num_inducing": 150,
+    "num_iterations": 1000,
     "learning_rate": 0.01,
 }
 
