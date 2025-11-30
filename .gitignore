@@ -2,7 +2,7 @@ venv
 *.txt
 *.pyc
 *.pkl
-*.csv
+# *.csv
 *.pt
 *.sdf
 *.nc
