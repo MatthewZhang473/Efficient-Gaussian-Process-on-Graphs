@@ -1,0 +1,3040 @@
+{
+  "metadata": {
+    "timestamp": "2025-08-15T11:22:19.785201",
+    "data_type": "bo_summary",
+    "description": "Compact BO results with one row per (algorithm, bo_seed, iteration)",
+    "total_rows": 300,
+    "algorithms": [
+      "random_search",
+      "sparse_grf"
+    ],
+    "bo_seeds": [
+      100,
+      110,
+      120
+    ],
+    "num_bo_runs": 3,
+    "max_iterations": 50,
+    "min_iterations": 1,
+    "columns": [
+      "algorithm",
+      "bo_seed",
+      "iteration",
+      "best_value",
+      "regret",
+      "dataset_size",
+      "ground_truth_best",
+      "simple_regret"
+    ],
+    "compression_info": {
+      "summary_rows": 300,
+      "expected_full_rows": 300
+    },
+    "ground_truth_best": 3.312703929387108,
+    "n_nodes": 1000000,
+    "original_total_experiments": 300000,
+    "compression_ratio": "1000.0x"
+  },
+  "summary_results": [
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 1,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 2000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 2,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 3000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 3,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 4000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 4,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 5000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 5,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 6000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 6,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 7000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 7,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 8000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 8,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 9000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 9,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 10000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 10,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 11000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 11,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 12000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 12,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 13000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 13,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 14000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 14,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 15000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 15,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 16000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 16,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 17000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 17,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 18000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 18,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 19000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 19,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 20000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 20,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 21000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 21,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 22000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 22,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 23000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 23,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 24000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 24,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 25000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 25,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 26000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 26,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 27000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 27,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 28000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 28,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 29000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 29,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 30000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 30,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 31000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 31,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 32000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 32,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 33000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 33,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 34000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 34,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 35000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 35,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 36000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 36,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 37000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 37,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 38000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 38,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 39000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 39,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 40000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 40,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 41000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 41,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 42000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 42,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 43000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 43,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 44000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 44,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 45000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 45,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 46000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 46,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 47000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 47,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 48000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 48,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 49000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 49,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 50000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 100,
+      "iteration": 50,
+      "best_value": 3.1401490756870767,
+      "regret": 0.1725548537000309,
+      "dataset_size": 51000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.17255485370003143
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 1,
+      "best_value": 3.0044225898144834,
+      "regret": 0.3082813395726242,
+      "dataset_size": 2000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.3082813395726247
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 2,
+      "best_value": 3.0044225898144834,
+      "regret": 0.3082813395726242,
+      "dataset_size": 3000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.3082813395726247
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 3,
+      "best_value": 3.0044225898144834,
+      "regret": 0.3082813395726242,
+      "dataset_size": 4000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.3082813395726247
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 4,
+      "best_value": 3.0044225898144834,
+      "regret": 0.3082813395726242,
+      "dataset_size": 5000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.3082813395726247
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 5,
+      "best_value": 3.089832547395389,
+      "regret": 0.2228713819917187,
+      "dataset_size": 6000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.2228713819917192
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 6,
+      "best_value": 3.089832547395389,
+      "regret": 0.2228713819917187,
+      "dataset_size": 7000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.2228713819917192
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 7,
+      "best_value": 3.089832547395389,
+      "regret": 0.2228713819917187,
+      "dataset_size": 8000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.2228713819917192
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 8,
+      "best_value": 3.096153561209418,
+      "regret": 0.2165503681776894,
+      "dataset_size": 9000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.2165503681776899
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 9,
+      "best_value": 3.096153561209418,
+      "regret": 0.2165503681776894,
+      "dataset_size": 10000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.2165503681776899
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 10,
+      "best_value": 3.109823941450952,
+      "regret": 0.2028799879361558,
+      "dataset_size": 11000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.20287998793615625
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 11,
+      "best_value": 3.109823941450952,
+      "regret": 0.2028799879361558,
+      "dataset_size": 12000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.20287998793615625
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 12,
+      "best_value": 3.109823941450952,
+      "regret": 0.2028799879361558,
+      "dataset_size": 13000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.20287998793615625
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 13,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 14000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 14,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 15000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 15,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 16000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 16,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 17000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 17,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 18000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 18,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 19000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 19,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 20000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 20,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 21000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 21,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 22000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 22,
+      "best_value": 3.1752966267704403,
+      "regret": 0.1374073026166673,
+      "dataset_size": 23000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.13740730261666778
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 23,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 24000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 24,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 25000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 25,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 26000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 26,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 27000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 27,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 28000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 28,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 29000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 29,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 30000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 30,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 31000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 31,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 32000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 32,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 33000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 33,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 34000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 34,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 35000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 35,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 36000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 36,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 37000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 37,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 38000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 38,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 39000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 39,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 40000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 40,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 41000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 41,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 42000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 42,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 43000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 43,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 44000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 44,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 45000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 45,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 46000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 46,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 47000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 47,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 48000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 48,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 49000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 49,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 50000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 110,
+      "iteration": 50,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 51000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 1,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 2000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 2,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 3000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 3,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 4000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 4,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 5000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 5,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 6000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 6,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 7000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 7,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 8000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 8,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 9000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 9,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 10000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 10,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 11000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 11,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 12000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 12,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 13000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 13,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 14000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 14,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 15000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 15,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 16000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 16,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 17000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 17,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 18000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 18,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 19000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 19,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 20000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 20,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 21000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 21,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 22000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 22,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 23000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 23,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 24000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 24,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 25000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 25,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 26000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 26,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 27000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 27,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 28000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 28,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 29000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 29,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 30000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 30,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 31000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 31,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 32000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 32,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 33000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 33,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 34000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 34,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 35000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 35,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 36000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 36,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 37000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 37,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 38000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 38,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 39000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 39,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 40000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 40,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 41000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 41,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 42000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 42,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 43000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 43,
+      "best_value": 3.2166975686339283,
+      "regret": 0.0960063607531793,
+      "dataset_size": 44000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.09600636075317981
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 44,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 45000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 45,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 46000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 46,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 47000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 47,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 48000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 48,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 49000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 49,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 50000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "random_search",
+      "bo_seed": 120,
+      "iteration": 50,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 51000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 1,
+      "best_value": 2.948903083801269,
+      "regret": 0.3638008455858381,
+      "dataset_size": 2000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.36380084558583903
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 2,
+      "best_value": 3.0129185948758064,
+      "regret": 0.2997853345113013,
+      "dataset_size": 3000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.29978533451130174
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 3,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 4000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 4,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 5000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 5,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 6000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 6,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 7000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 7,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 8000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 8,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 9000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 9,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 10000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 10,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 11000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 11,
+      "best_value": 3.117156622183522,
+      "regret": 0.1955473072035856,
+      "dataset_size": 12000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19554730720358604
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 12,
+      "best_value": 3.122761876696364,
+      "regret": 0.189942052690744,
+      "dataset_size": 13000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.18994205269074405
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 13,
+      "best_value": 3.122761876696364,
+      "regret": 0.189942052690744,
+      "dataset_size": 14000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.18994205269074405
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 14,
+      "best_value": 3.122761876696364,
+      "regret": 0.189942052690744,
+      "dataset_size": 15000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.18994205269074405
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 15,
+      "best_value": 3.122761876696364,
+      "regret": 0.189942052690744,
+      "dataset_size": 16000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.18994205269074405
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 16,
+      "best_value": 3.122761876696364,
+      "regret": 0.189942052690744,
+      "dataset_size": 17000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.18994205269074405
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 17,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 18000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 18,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 19000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 19,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 20000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 20,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 21000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 21,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 22000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 22,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 23000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 23,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 24000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 24,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 25000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 25,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 26000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 26,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 27000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 27,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 28000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 28,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 29000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 29,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 30000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 30,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 31000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 31,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 32000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 32,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 33000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 33,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 34000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 34,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 35000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 35,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 36000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 36,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 37000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 37,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 38000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 38,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 39000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 39,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 40000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 40,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 41000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 41,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 42000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 42,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 43000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 43,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 44000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 44,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 45000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 45,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 46000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 46,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 47000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 47,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 48000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 48,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 49000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 49,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 50000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 100,
+      "iteration": 50,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 51000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 1,
+      "best_value": 2.9484499827112325,
+      "regret": 0.3642539466758752,
+      "dataset_size": 2000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.36425394667587563
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 2,
+      "best_value": 3.1139248845814644,
+      "regret": 0.1987790448056432,
+      "dataset_size": 3000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19877904480564368
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 3,
+      "best_value": 3.1139248845814644,
+      "regret": 0.1987790448056432,
+      "dataset_size": 4000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19877904480564368
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 4,
+      "best_value": 3.1139248845814644,
+      "regret": 0.1987790448056432,
+      "dataset_size": 5000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.19877904480564368
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 5,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 6000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 6,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 7000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 7,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 8000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 8,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 9000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 9,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 10000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 10,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 11000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 11,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 12000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 12,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 13000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 13,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 14000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 14,
+      "best_value": 3.1468613182627543,
+      "regret": 0.1658426111243534,
+      "dataset_size": 15000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.16584261112435383
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 15,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 16000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 16,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 17000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 17,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 18000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 18,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 19000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 19,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 20000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 20,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 21000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 21,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 22000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 22,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 23000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 23,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 24000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 24,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 25000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 25,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 26000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 26,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 27000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 27,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 28000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 28,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 29000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 29,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 30000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 30,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 31000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 31,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 32000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 32,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 33000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 33,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 34000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 34,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 35000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 35,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 36000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 36,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 37000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 37,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 38000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 38,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 39000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 39,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 40000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 40,
+      "best_value": 3.2529269049062086,
+      "regret": 0.059777024480899,
+      "dataset_size": 41000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.0597770244808995
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 41,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 42000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 42,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 43000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 43,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 44000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 44,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 45000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 45,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 46000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 46,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 47000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 47,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 48000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 48,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 49000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 49,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 50000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 110,
+      "iteration": 50,
+      "best_value": 3.304498998476164,
+      "regret": 0.0082049309109435,
+      "dataset_size": 51000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.008204930910943986
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 1,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 2000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 2,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 3000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 3,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 4000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 4,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 5000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 5,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 6000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 6,
+      "best_value": 3.1715402603149414,
+      "regret": 0.1411636690721662,
+      "dataset_size": 7000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.1411636690721667
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 7,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 8000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 8,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 9000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 9,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 10000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 10,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 11000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 11,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 12000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 12,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 13000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 13,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 14000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 14,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 15000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 15,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 16000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 16,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 17000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 17,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 18000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 18,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 19000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 19,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 20000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 20,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 21000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 21,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 22000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 22,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 23000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 23,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 24000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 24,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 25000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 25,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 26000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 26,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 27000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 27,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 28000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 28,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 29000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 29,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 30000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 30,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 31000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 31,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 32000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 32,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 33000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 33,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 34000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 34,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 35000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 35,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 36000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 36,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 37000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 37,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 38000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 38,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 39000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 39,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 40000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 40,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 41000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 41,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 42000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 42,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 43000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 43,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 44000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 44,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 45000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 45,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 46000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 46,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 47000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 47,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 48000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 48,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 49000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 49,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 50000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    },
+    {
+      "algorithm": "sparse_grf",
+      "bo_seed": 120,
+      "iteration": 50,
+      "best_value": 3.294611472070263,
+      "regret": 0.0180924573168446,
+      "dataset_size": 51000,
+      "ground_truth_best": 3.312703929387108,
+      "simple_regret": 0.018092457316845056
+    }
+  ]
+}

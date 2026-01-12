@@ -1,2 +1,0 @@
-seed,model,walks_per_node,lml,rmse,nlpd,beta,sigma_f,variance,num_params
-1112,GCN,,,16.73686428181088,,,,,2753

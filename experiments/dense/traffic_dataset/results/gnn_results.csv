@@ -1,0 +1,2 @@
+seed,model,rmse,num_params
+1111,GNN_deterministic,18.472675323486328,2753

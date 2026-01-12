@@ -47,8 +47,16 @@ print(K_sparse.shape)  # (4, 4)
 ```
 
 ## Reproducibility notes
-- Core logic lives in `efficient_graph_gp/` (dense, GPflow-friendly) and `efficient_graph_gp_sparse/` (sparse, GPyTorch-friendly). These mirror the GRF constructions and complexity guarantees described in the paper.
-- Experiments used in the paper sit under `experiments_dense/`, `experiments_sparse/`, and `graph_bo/`. Large datasets are not bundled; use the data-loading scripts in those folders to fetch sources (PEMS traffic, SNAP social graphs, ERA5 wind, etc.).
+- Core logic lives in `efficient_graph_gp/` (dense, GPflow-friendly) and `efficient_graph_gp_sparse/` (sparse, GPyTorch-friendly). These mirror the Graph Random Features constructions and complexity guarantees described in the paper.
+- Paper experiments are organized under `experiments/`:
+  - `dense/traffic_dataset`: San Jose traffic regression.
+  - `dense/cora`: Cora citation classification.
+  - `dense/ablation`: ablation of random-walk kernel construction.
+  - `sparse/scaling_exp`: scaling benchmarks (O(N^{3/2}) conjugate gradients).
+  - `sparse/scalable_bo`: Bayesian optimisation on synthetic/social/wind graphs (uses configs/results in this folder).
+  - `sparse/social_networks`: SNAP social graph assets for BO.
+- `graph_bo/` contains the BO scripts/configs used in the paper; see its README for details.
+- Large datasets are not bundled; use the data-loading scripts in those folders to fetch sources (PEMS traffic, SNAP social graphs, ERA5 wind, etc.).
 - Tests: run `pytest -q` for smoke coverage on the GRF kernels and samplers.
 
 ## Project structure (high level)

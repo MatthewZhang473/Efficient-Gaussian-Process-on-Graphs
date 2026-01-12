@@ -1,0 +1,45 @@
+{
+  "WALKS_PER_NODE": 100,
+  "P_HALT": 0.1,
+  "MAX_WALK_LENGTH": 3,
+  "GP_GRAPH_SIZES": [
+    32,
+    64,
+    128,
+    256,
+    512,
+    1024,
+    2048,
+    4096,
+    8192
+  ],
+  "GP_SPARSE_ONLY_SIZES": [],
+  "N_EPOCHS": 50,
+  "TRAIN_RATIO": 0.6,
+  "NOISE_STD": 0.1,
+  "INITIAL_NOISE_VARIANCE": 0.1,
+  "LEARNING_RATE": 0.1,
+  "N_REPEATS": 5,
+  "RW_SEEDS": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "DATA_SYNTHESIS_PARAMS": {
+    "beta_sample": 1.0,
+    "kernel_std": 1.0,
+    "noise_std": 0.1,
+    "splits": [
+      0.6,
+      0.2,
+      0.2
+    ],
+    "seed": 42
+  },
+  "BASE_DIR": "/scratches/cartwright/mz473/Efficient-Gaussian-Process-on-Graphs/experiments_sparse/scaling_exp",
+  "DATA_DIR": "/scratches/cartwright/mz473/Efficient-Gaussian-Process-on-Graphs/experiments_sparse/scaling_exp/synthetic_data",
+  "STEP_MATRICES_DIR": "/scratches/cartwright/mz473/Efficient-Gaussian-Process-on-Graphs/experiments_sparse/scaling_exp/step_matrices",
+  "STATS_DIR": "/scratches/cartwright/mz473/Efficient-Gaussian-Process-on-Graphs/experiments_sparse/scaling_exp/stats"
+}
