@@ -1,143 +1,135 @@
+"""Random-walk sampler operating on sparse CSR adjacency for GRF features."""
+
+import os
+import multiprocessing as mp
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+
 import numpy as np
 import scipy.sparse as sp
-from tqdm import tqdm
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from collections import defaultdict
-import os
+
+# ---- Global read-only CSR arrays (populated once per worker via initializer)
+_G_INDPTR = None
+_G_INDICES = None
+_G_DATA = None
+_G_NUM_NODES = None
+
+def _init_worker(indptr: np.ndarray, indices: np.ndarray, data: np.ndarray, num_nodes: int) -> None:
+    """Runs once in each worker: bind globals to parent's CSR memory (fork: CoW)."""
+    global _G_INDPTR, _G_INDICES, _G_DATA, _G_NUM_NODES
+    _G_INDPTR = indptr
+    _G_INDICES = indices
+    _G_DATA = data
+    _G_NUM_NODES = num_nodes
+
+def _worker_walks(
+    args: Tuple[Sequence[int], int, float, int, int, bool]
+) -> List[Dict[Tuple[int, int], float]]:
+    """Worker: now reads neighbors directly from global CSR arrays."""
+    nodes, num_walks, p_halt, max_walk_length, seed, show_progress = args
+    rng = np.random.default_rng(seed)
+
+    step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
+    it = tqdm(nodes, desc="Process walks", disable=not show_progress) if show_progress else nodes
+
+    for start_node in it:
+        for _ in range(num_walks):
+            current_node = start_node
+            load = 1.0
+            for step in range(max_walk_length):
+                # accumulate (start, current)
+                step_accumulators[step][(start_node, current_node)] += load
+
+                s = _G_INDPTR[current_node]
+                e = _G_INDPTR[current_node + 1]
+                degree = e - s
+                if degree == 0 or rng.random() < p_halt:
+                    break
+
+                # pick neighbor and advance
+                next_idx = rng.integers(degree)
+                weight = _G_DATA[s + next_idx]
+                current_node = _G_INDICES[s + next_idx]
+                load *= degree * weight / (1 - p_halt)
+
+    return step_accumulators
 
 
 class SparseRandomWalk:
-    """
-    Efficient sparse random walk sampler for weighted graphs.
-    
-    Uses direct COO accumulation to build step matrices without intermediate operations.
-    """
-    
-    def __init__(self, adjacency_matrix, seed=None):
-        """Initialize with adjacency matrix and optional random seed."""
-        self.adjacency = adjacency_matrix.tocsr()
-        self.num_nodes = adjacency_matrix.shape[0]
-        self.rng = np.random.default_rng(seed)
-        self.seed = seed or 42
-        
-        # Cache neighbors and weights for efficiency using direct CSR access
-        self._neighbors = {}
-        self._weights = {}
-        indptr = self.adjacency.indptr
-        indices = self.adjacency.indices
-        data = self.adjacency.data
-        
-        for node in tqdm(range(self.num_nodes), desc="Caching neighbors and weights"):
-            start_idx = indptr[node]
-            end_idx = indptr[node + 1]
-            self._neighbors[node] = indices[start_idx:end_idx]
-            self._weights[node] = data[start_idx:end_idx]
-    
-    @staticmethod
-    def _worker_walks(args):
-        """Worker function for multiprocessing random walks."""
-        nodes, adj_data, num_walks, p_halt, max_walk_length, seed, show_progress, n_processes = args
-        
-        # Reconstruct adjacency matrix and setup
-        data, indices, indptr, shape = adj_data
-        adjacency = sp.csr_matrix((data, indices, indptr), shape=shape)
-        rng = np.random.default_rng(seed)
-        
-        # Cache neighbors and weights for ALL nodes (since walks can visit any node)
-        neighbors = {}
-        weights = {}
-        for node in range(shape[0]):
-            row = adjacency.getrow(node)
-            neighbors[node] = row.indices
-            weights[node] = row.data
-        
-        # Initialize dictionary accumulators instead of coordinate lists
-        step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
-        
-        # Only show progress for one process (the first one)
-        iterator = tqdm(nodes, desc=f"Process 1/{n_processes} - Nodes processed", disable=not show_progress) if show_progress else nodes
-        
-        for start_node in iterator:
-            for _ in range(num_walks):
-                current_node = start_node
-                load = 1.0
-                
-                for step in range(max_walk_length):
-                    # Accumulate load for (start_node, current_node) pair
-                    step_accumulators[step][(start_node, current_node)] += load
-                    
-                    # Get neighbors and check termination
-                    node_neighbors = neighbors[current_node]
-                    degree = len(node_neighbors)
-                    
-                    if degree == 0 or rng.random() < p_halt:
-                        break
-                    
-                    # Move to next node and update load
-                    next_idx = rng.choice(degree)
-                    weight = weights[current_node][next_idx]  # Get weight before moving
-                    current_node = node_neighbors[next_idx]
-                    load *= degree * weight / (1 - p_halt)
-        
-        return step_accumulators
+    """Sparse random-walk generator on CSR adjacency matrices."""
 
-    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False, n_processes=None):
+    def __init__(self, adjacency_matrix: sp.spmatrix, seed: Optional[int] = None) -> None:
+        self.adjacency = adjacency_matrix.tocsr()
+        self.num_nodes = self.adjacency.shape[0]
+        self.seed = seed or 42
+
+        # Keep direct views; no extra copies
+        self.indptr = self.adjacency.indptr           # int32
+        self.indices = self.adjacency.indices         # int32
+        self.data = self.adjacency.data.astype(float, copy=False)
+
+    def get_random_walk_matrices(
+        self,
+        num_walks: int,
+        p_halt: float,
+        max_walk_length: int,
+        use_tqdm: bool = False,
+        n_processes: Optional[int] = None,
+    ) -> List[sp.csr_matrix]:
         """
-        Generate random walk step matrices.
-        
-        Args:
-            num_walks: Number of walks per starting node
-            p_halt: Probability of halting at each step
-            max_walk_length: Maximum steps per walk
-            use_tqdm: Show progress bar
-            n_processes: Number of processes (default: CPU count)
-            
+        Perform multiple random walks from every node and collect per-step occupancy matrices.
+
         Returns:
-            List of sparse CSR matrices, each num_nodes × num_nodes representing walks at step t.
+            List of CSR matrices, one per step, where entry (i, j) counts expected visits to j
+            after ``step`` steps when starting from i (normalised by num_walks).
         """
         if n_processes is None:
             n_processes = os.cpu_count()
-        
-        # Split nodes across processes
-        chunks = np.array_split(range(self.num_nodes), n_processes)
-        adj_data = (self.adjacency.data, self.adjacency.indices, self.adjacency.indptr, self.adjacency.shape)
-        
-        # Prepare worker arguments - only first process shows progress
-        args = [
-            (chunk.tolist(), adj_data, num_walks, p_halt, max_walk_length, self.seed + i, use_tqdm and i == 0, n_processes)
-            for i, chunk in enumerate(chunks)
-        ]
-        
-        # Execute in parallel
-        with ProcessPoolExecutor(max_workers=n_processes) as executor:
-            results = list(executor.map(self._worker_walks, args))
-        
-        # Merge dictionaries from all processes
-        step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
-        for result in results:
-            for step in range(max_walk_length):
-                for coord_pair, value in result[step].items():
-                    step_accumulators[step][coord_pair] += value
-        
-        # Convert dictionaries to COO matrices
-        step_matrices = []
-        for step in range(max_walk_length):
-            if step_accumulators[step]:
-                # Extract coordinates and values
-                coord_pairs = list(step_accumulators[step].keys())
-                rows = [pair[0] for pair in coord_pairs]
-                cols = [pair[1] for pair in coord_pairs]  
-                data = [step_accumulators[step][pair] for pair in coord_pairs]
-                
-                coo_matrix = sp.coo_matrix((data, (rows, cols)), shape=(self.num_nodes, self.num_nodes))
-                matrix = coo_matrix.tocsr() / num_walks
-            else:
-                matrix = sp.csr_matrix((self.num_nodes, self.num_nodes))
-                
-            step_matrices.append(matrix)
-        
-        return step_matrices
 
+        chunks = np.array_split(np.arange(self.num_nodes), n_processes)
+
+        # Use fork (Linux) so workers share memory via CoW; also set initializer to bind globals
+        ctx = mp.get_context("fork")
+        with ProcessPoolExecutor(
+            max_workers=n_processes,
+            mp_context=ctx,
+            initializer=_init_worker,
+            initargs=(self.indptr, self.indices, self.data, self.num_nodes),
+        ) as executor:
+
+            args = [
+                (chunk.tolist(), num_walks, p_halt, max_walk_length, self.seed + i, use_tqdm and i == 0)
+                for i, chunk in enumerate(chunks)
+            ]
+
+            # Stream results to avoid holding all at once
+            futures = [executor.submit(_worker_walks, a) for a in args]
+            step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
+
+            for fut in as_completed(futures):
+                result = fut.result()
+                for step in range(max_walk_length):
+                    for k, v in result[step].items():
+                        step_accumulators[step][k] += v
+
+        # Build matrices (unchanged)
+        mats = []
+        for step in range(max_walk_length):
+            acc = step_accumulators[step]
+            if not acc:
+                mats.append(sp.csr_matrix((self.num_nodes, self.num_nodes)))
+                continue
+
+            # Avoid extra Python list churn
+            keys = list(acc.keys())
+            rows = np.fromiter((r for r, _ in keys), dtype=np.int32, count=len(keys))
+            cols = np.fromiter((c for _, c in keys), dtype=np.int32, count=len(keys))
+            vals = np.fromiter((acc[k] for k in keys), dtype=float, count=len(keys))
+
+            mats.append(sp.csr_matrix((vals, (rows, cols)), shape=(self.num_nodes, self.num_nodes)) / num_walks)
+
+        return mats
 
 if __name__ == "__main__":
     # Check available CPU cores
@@ -151,7 +143,7 @@ if __name__ == "__main__":
     
     walker = SparseRandomWalk(adjacency, seed=42)
     step_matrices = walker.get_random_walk_matrices(
-        num_walks=100000, p_halt=0.1, max_walk_length=6, use_tqdm=True, n_processes=4
+        num_walks=100000, p_halt=0.1, max_walk_length=6, use_tqdm=True, n_processes=2
     )
     
     print(f"Generated {len(step_matrices)} step matrices")

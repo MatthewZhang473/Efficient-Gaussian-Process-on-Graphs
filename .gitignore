@@ -2,9 +2,15 @@ venv
 *.txt
 *.pyc
 *.pkl
-*.csv
+# *.csv
+*.pt
+*.sdf
+*.nc
+*.npz
+*.log
 .DS_Store
 pems-bay.h5
 PKG-INFO
 .ipynb_checkpoints/
 __pycache__
+!requirements*.txt
