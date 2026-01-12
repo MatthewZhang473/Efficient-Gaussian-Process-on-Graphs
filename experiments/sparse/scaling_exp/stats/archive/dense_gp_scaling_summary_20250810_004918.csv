@@ -1,6 +1,0 @@
-,n_nodes,n_nodes,n_nodes,n_nodes,seed,seed,seed,seed,n_train,n_train,n_train,n_train,n_test,n_test,n_test,n_test,train_time,train_time,train_time,train_time,inference_time,inference_time,inference_time,inference_time,total_time,total_time,total_time,total_time,test_rmse,test_rmse,test_rmse,test_rmse,noise_variance,noise_variance,noise_variance,noise_variance,modulator_l2,modulator_l2,modulator_l2,modulator_l2
-,mean,std,min,max,mean,std,min,max,mean,std,min,max,mean,std,min,max,mean,std,min,max,mean,std,min,max,mean,std,min,max,mean,std,min,max,mean,std,min,max,mean,std,min,max
-n_nodes,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-32,32.0,0.0,32,32,44.0,1.5811,42,46,19.0,0.0,19,19,7.0,0.0,7,7,1.6674,0.4695,1.3174,2.4739,0.0159,0.0031,0.0143,0.0214,1.6833,0.4724,1.3317,2.4953,0.2435,0.0596,0.1808,0.3221,0.0,0.0,0.0,0.0,0.6477,0.0259,0.6115,0.6726
-64,64.0,0.0,64,64,44.0,1.5811,42,46,38.0,0.0,38,38,14.0,0.0,14,14,1.4119,0.0918,1.3309,1.524,0.0153,0.0009,0.0144,0.0166,1.4272,0.0915,1.3475,1.5394,0.1754,0.0276,0.1315,0.1982,0.0,0.0,0.0,0.0,0.5949,0.0261,0.5683,0.6358
-128,128.0,0.0,128,128,44.0,1.5811,42,46,76.0,0.0,76,76,27.0,0.0,27,27,1.4275,0.133,1.2628,1.5591,0.0162,0.0016,0.0146,0.0187,1.4436,0.1343,1.2774,1.5751,0.2094,0.0152,0.1888,0.231,0.0,0.0,0.0,0.0,0.5599,0.0122,0.5499,0.5805

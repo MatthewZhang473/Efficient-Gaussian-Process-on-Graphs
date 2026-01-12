@@ -1,9 +1,0 @@
-{
-  "timestamp": "20250815_214152",
-  "graph_type": "grid_multimodal",
-  "total_experiments": 270,
-  "n_nodes": 1000000,
-  "n_edges": null,
-  "avg_degree": null,
-  "n_peaks": 20
-}

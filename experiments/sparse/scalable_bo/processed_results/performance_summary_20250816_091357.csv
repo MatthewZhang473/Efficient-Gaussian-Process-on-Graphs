@@ -1,4 +1,0 @@
-graph_type,algorithm,final_regret_mean,final_regret_std,num_runs
-overall,bfs,0.171515,0.061537,5
-overall,random_search,0.221093,0.099968,5
-overall,sparse_grf,0.216394,0.074545,5
