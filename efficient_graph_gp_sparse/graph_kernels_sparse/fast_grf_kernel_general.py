@@ -1,3 +1,9 @@
+"""Fast sparse GRF kernel construction using CSR random walks."""
+
+from typing import Sequence
+
+import numpy as np
+
 try:
     from ..random_walk_samplers_sparse import SparseRandomWalk
     from ..utils_sparse import get_normalized_laplacian
@@ -5,24 +11,31 @@ except ImportError:
     # For running directly or when relative imports fail
     import sys
     import os
+
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from random_walk_samplers_sparse import SparseRandomWalk
     from utils import get_normalized_laplacian
 
 
-def fast_general_grf_kernel(adj_matrix, modulator_vector, walks_per_node=50, p_halt=0.1, max_walk_length=10): 
+def fast_general_grf_kernel(
+    adj_matrix,
+    modulator_vector: Sequence[float],
+    walks_per_node: int = 50,
+    p_halt: float = 0.1,
+    max_walk_length: int = 10,
+):
     """
-    Construct graph random features on the normalized graph Laplacian.
-    
+    Construct sparse GRF kernel estimate K ≈ ΦΦᵀ on the normalized Laplacian.
+
     Args:
-    - adj_matrix: Sparse adjacency matrix of the graph.
-    - modulator_vector: Dense vector modulating the random walk features (length = max_walk_length).
-    - walks_per_node: Number of random walks per node.
-    - p_halt: Probability of halting the random walk.
-    - max_walk_length: Maximum length of the random walks.
-    
+        adj_matrix: Sparse adjacency matrix (CSR/CSC).
+        modulator_vector: Modulation weights f_l of length ``max_walk_length``.
+        walks_per_node: Number of walks launched from each node.
+        p_halt: Per-step halting probability.
+        max_walk_length: Maximum walk length (also truncates modulation).
+
     Returns:
-    - Sparse kernel matrix of shape (num_nodes, num_nodes).
+        Sparse kernel matrix (CSR) of shape (num_nodes, num_nodes).
     """
     import scipy.sparse as sp
     
@@ -80,4 +93,3 @@ if __name__ == "__main__":
     print(f"Kernel matrix shape: {kernel_matrix.shape}")
     print(f"Kernel matrix sparsity: {kernel_matrix.nnz / n_nodes**2:.4f}")
     print(f"Sample of kernel matrix (first 10x10):\n{kernel_matrix[:10, :10].toarray()}")
-

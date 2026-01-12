@@ -1,66 +1,70 @@
-# Efficient Gaussian Process on Graphs
+# Efficient Gaussian Processes on Graphs (GRFs)
 
-This repository hosts an ongoing research project, developed as part of my fourth-year research for the Cambridge Engineering degree.
+Reference implementation for the paper *Graph Random Features for Scalable Gaussian Processes*. The repo contains the dense (`efficient_graph_gp`) and sparse (`efficient_graph_gp_sparse`) Graph Random Features (GRF) kernels, plus the experiment scripts used in the paper.
 
-## Project Overview
+## Install
 
-The project aims to harness the General Graph Random Features (g-GRF) algorithm to enable efficient computation of covariance matrices on graphs. By doing so, it makes Gaussian Process (GP) inference computationally efficient and scalable for graph-structured data.
-
-## Repository Structure
-
-### **`experiments/`**
-Contains Jupyter notebooks that demonstrate the use cases, experiments, and performance evaluations of the implemented methods.
-
-- **`convergence_tests/`**: 
-  - Demonstrates the convergence of different methods used to approximate covariance matrices compared to the ground truth covariance matrices.
-
-  - We also showed that the error in GRF approximation does not increase as the graph size increases.
-
-- **`gp_inference_tests/`**: 
-  - Showcases Gaussian Process (GP) inference on synthetic data using various approximated covariance matrices.
-
-- **`kernel_lazy_update/`**: 
-  - Illustrates a lazy update algorithm designed for efficiently updating the graph covariance matrix when introducing a new node.
-
-- **`error_analysis_in_gp_inference`**:
-  - We illustrated the convergence of GP inference for the toy example, where the maximum likelihood inference of the hyperparameters converges to the ground truth hyperparameter (which we sued to sample the data) as we increase the number of node use in the graph.
-
-- **`grf_performance_bounds`**:
-  - Further experiments to show how the GRF method is getting converging and consistent result compared to exact kernel in the GP inference context.
-
-### **`efficient_graph_gp/`**
-Core module implementing the Graph Gaussian Process (GP) inference system, including the g-GRF algorithm.
-
-### **`presentations/`**
-Slides and other materials that explain:
-- The project motivation.
-- A detailed overview of the Gaussian Random Field (GRF) algorithm.
-
-## Research Objectives
-
-1. Develop scalable Gaussian Process inference methods tailored for graph data.
-2. Implement and optimize the g-GRF algorithm to efficiently compute covariance matrices for graphs.
-3. Demonstrate practical applications of GP inference on graph-structured datasets.
-
-## Authors and Supervision
-
-- **Author**: Matthew Zhang ([mz473@cam.ac.uk](mailto:mz473@cam.ac.uk))  
-  - Fourth-year Engineering student at the University of Cambridge
-  - Interested in bayesian machine learning & graph theory
-- **Supervisors**:  
-  - **Professor Rich Turner**
-  - **Isaac Reid**
-
-## Contributions
-
-Contributions to the repository are welcome! Feel free to submit issues or pull requests to help improve the codebase, documentation, or explore additional applications of the g-GRF algorithm.  
-
-For any questions or feedback, please contact the author at [mz473@cam.ac.uk](mailto:mz473@cam.ac.uk).
-
-## Getting Started
-
-To explore the project, clone the repository and navigate to the `experiments/` directory for examples and applications:
-
+All dependencies (core + experiments) are pinned in `requirements.txt`:
 ```bash
-git clone https://github.com/MatthewZhang473/Efficient-Gaussian-Process-on-Graphs.git
-cd Efficient-Gaussian-Process-on-Graphs
+pip install -r requirements.txt
+```
+
+## Quickstart
+
+Dense GRF kernel on a toy graph:
+```python
+import numpy as np
+from efficient_graph_gp.graph_kernels.fast_grf_kernel_general import fast_general_grf_kernel
+
+adj = np.array([[0,1,1,0],
+                [1,0,0,1],
+                [1,0,0,1],
+                [0,1,1,0]], dtype=float)
+modulator = [1.0, 0.5, 0.25]  # f_l terms
+K = fast_general_grf_kernel(adj_matrix=adj,
+                            modulator_vector=modulator,
+                            walks_per_node=50,
+                            p_halt=0.1,
+                            max_walk_length=len(modulator))
+print(K.shape)  # (4, 4)
+```
+
+Sparse GRF kernel (CSR adjacency, suitable for CG-based inference):
+```python
+import numpy as np
+import scipy.sparse as sp
+from efficient_graph_gp_sparse.graph_kernels_sparse.fast_grf_kernel_general import fast_general_grf_kernel
+
+rows, cols = zip(*[(0,1),(1,0),(1,2),(2,1),(2,3),(3,2),(3,0),(0,3)])
+adj_csr = sp.csr_matrix((np.ones(len(rows)), (rows, cols)), shape=(4,4))
+modulator = [1.0, 0.5, 0.25]
+K_sparse = fast_general_grf_kernel(adj_matrix=adj_csr,
+                                   modulator_vector=modulator,
+                                   walks_per_node=50,
+                                   p_halt=0.1,
+                                   max_walk_length=len(modulator))
+print(K_sparse.shape)  # (4, 4)
+```
+
+## Reproducibility notes
+- Core logic lives in `efficient_graph_gp/` (dense, GPflow-friendly) and `efficient_graph_gp_sparse/` (sparse, GPyTorch-friendly). These mirror the Graph Random Features constructions and complexity guarantees described in the paper.
+- Paper experiments are organized under `experiments/`:
+  - `dense/traffic_dataset`: San Jose traffic regression.
+  - `dense/cora`: Cora citation classification.
+  - `dense/ablation`: ablation of random-walk kernel construction.
+  - `sparse/scaling_exp`: scaling benchmarks (O(N^{3/2}) conjugate gradients).
+  - `sparse/scalable_bo`: Bayesian optimisation on synthetic/social/wind graphs (uses configs/results in this folder).
+  - `sparse/social_networks`: SNAP social graph assets for BO.
+- `graph_bo/` contains the BO scripts/configs used in the paper; see its README for details.
+- Large datasets are not bundled; use the data-loading scripts in those folders to fetch sources (PEMS traffic, SNAP social graphs, ERA5 wind, etc.).
+- Tests: run `pytest -q` for smoke coverage on the GRF kernels and samplers.
+
+## Project structure (high level)
+- `efficient_graph_gp/`: dense GRF kernels, modulation functions, random-walk samplers.
+- `efficient_graph_gp_sparse/`: sparse GRF kernels, CSR samplers, sparse models/utilities.
+- `graph_bo/`: Bayesian optimisation scripts/configs on large graphs (as in the paper).
+- `experiments_dense/`, `experiments_sparse/`: notebooks and scripts for regression/classification and scaling studies.
+- `archive/`: historical experiments and scratch work.
+
+## Citation
+If you use this code, please cite the accompanying paper *Graph Random Features for Scalable Gaussian Processes* (preprint).
