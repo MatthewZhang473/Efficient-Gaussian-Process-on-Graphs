@@ -1,29 +1,35 @@
+"""Random-walk samplers used to build dense GRF feature tensors."""
+
+import os
+import multiprocessing as mp
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+
 import numpy as np
 from tqdm import tqdm
-from collections import defaultdict
-import os
-from concurrent.futures import ProcessPoolExecutor, as_completed
-import multiprocessing as mp
 
 # ---- Global read-only adjacency matrix (populated once per worker via initializer)
 _G_ADJACENCY = None
 _G_NUM_NODES = None
 
-def _init_worker(adjacency_matrix, num_nodes):
+def _init_worker(adjacency_matrix: np.ndarray, num_nodes: int) -> None:
     """Runs once in each worker: bind globals to parent's adjacency matrix memory (fork: CoW)."""
     global _G_ADJACENCY, _G_NUM_NODES
     _G_ADJACENCY = adjacency_matrix
     _G_NUM_NODES = num_nodes
 
-def _get_neighbors(node):
+def _get_neighbors(node: int) -> np.ndarray:
     """Get neighbors using global adjacency matrix."""
     return np.flatnonzero(_G_ADJACENCY[node])
 
-def _get_edge_weight(node1, node2):
+def _get_edge_weight(node1: int, node2: int) -> float:
     """Get edge weight using global adjacency matrix."""
     return _G_ADJACENCY[node1, node2]
 
-def _worker_walks(args):
+def _worker_walks(
+    args: Tuple[Sequence[int], int, float, int, int, bool]
+) -> List[Dict[Tuple[int, int], float]]:
     """Worker: performs walks for assigned nodes using global adjacency matrix."""
     nodes, num_walks, p_halt, max_walk_length, seed, show_progress = args
     rng = np.random.default_rng(seed)
@@ -55,7 +61,9 @@ def _worker_walks(args):
     return step_accumulators
 
 class Graph:
-    def __init__(self, adjacency_matrix=None):
+    """Minimal dense graph wrapper exposing adjacency, degree, and edge weights."""
+
+    def __init__(self, adjacency_matrix: Optional[np.ndarray] = None) -> None:
         if adjacency_matrix is not None:
             self.adjacency_matrix = adjacency_matrix
             self.num_nodes = adjacency_matrix.shape[0]
@@ -63,27 +71,40 @@ class Graph:
             self.adjacency_matrix = None
             self.num_nodes = 0
 
-    def get_neighbors(self, node):
+    def get_neighbors(self, node: int) -> np.ndarray:
         # Return indices where adjacency_matrix[node] is non-zero
         return np.flatnonzero(self.adjacency_matrix[node])
 
-    def get_num_nodes(self):
+    def get_num_nodes(self) -> int:
         return self.num_nodes
 
-    def get_edge_weight(self, node1, node2):
+    def get_edge_weight(self, node1: int, node2: int) -> float:
         return self.adjacency_matrix[node1, node2]
 
 
 class RandomWalk:
-    def __init__(self, graph: Graph, seed=None):
+    """Random-walk generator producing step-conditioned feature tensors."""
+
+    def __init__(self, graph: Graph, seed: Optional[int] = None) -> None:
         self.graph = graph
         self.rng = np.random.default_rng(seed)
         self.seed = seed or 42
 
-    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False, n_processes=None, ablation=False):
+    def get_random_walk_matrices(
+        self,
+        num_walks: int,
+        p_halt: float,
+        max_walk_length: int,
+        use_tqdm: bool = False,
+        n_processes: Optional[int] = None,
+        ablation: bool = False,
+    ) -> np.ndarray:
         """
-        Perform multiple random walks for each node in the graph as a starting point.
-        Returns a NumPy array of shape (num_nodes, num_nodes, max_walk_length).
+        Perform multiple random walks from each node and accumulate per-step occupancies.
+
+        Returns:
+            feature_matrices: Array with shape (num_nodes, num_nodes, max_walk_length),
+            where feature_matrices[i, j, l] counts visits to j after l steps starting at i.
         """
         num_nodes = self.graph.get_num_nodes()
         
@@ -124,7 +145,14 @@ class RandomWalk:
         # Build final 3D array from accumulated results
         return self._build_matrices_from_accumulators(step_accumulators, num_walks, num_nodes, max_walk_length)
     
-    def _sequential_walks(self, num_walks, p_halt, max_walk_length, use_tqdm, ablation=False):
+    def _sequential_walks(
+        self,
+        num_walks: int,
+        p_halt: float,
+        max_walk_length: int,
+        use_tqdm: bool,
+        ablation: bool = False,
+    ) -> np.ndarray:
         """Original sequential implementation."""
         num_nodes = self.graph.get_num_nodes()
         step_accumulators = [defaultdict(float) for _ in range(max_walk_length)]
@@ -157,7 +185,13 @@ class RandomWalk:
         
         return self._build_matrices_from_accumulators(step_accumulators, num_walks, num_nodes, max_walk_length)
     
-    def _build_matrices_from_accumulators(self, step_accumulators, num_walks, num_nodes, max_walk_length):
+    def _build_matrices_from_accumulators(
+        self,
+        step_accumulators: Sequence[Dict[Tuple[int, int], float]],
+        num_walks: int,
+        num_nodes: int,
+        max_walk_length: int,
+    ) -> np.ndarray:
         """Build final 3D array from accumulated results."""
         feature_matrices = np.zeros((num_nodes, num_nodes, max_walk_length), dtype=float)
         

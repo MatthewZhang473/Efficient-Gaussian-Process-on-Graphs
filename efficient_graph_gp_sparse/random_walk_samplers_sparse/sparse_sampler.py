@@ -1,10 +1,13 @@
+"""Random-walk sampler operating on sparse CSR adjacency for GRF features."""
+
+import os
+import multiprocessing as mp
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+
 import numpy as np
 import scipy.sparse as sp
-import os
-from collections import defaultdict
-from tqdm import tqdm
-from concurrent.futures import ProcessPoolExecutor, as_completed
-import multiprocessing as mp
 
 # ---- Global read-only CSR arrays (populated once per worker via initializer)
 _G_INDPTR = None
@@ -12,7 +15,7 @@ _G_INDICES = None
 _G_DATA = None
 _G_NUM_NODES = None
 
-def _init_worker(indptr, indices, data, num_nodes):
+def _init_worker(indptr: np.ndarray, indices: np.ndarray, data: np.ndarray, num_nodes: int) -> None:
     """Runs once in each worker: bind globals to parent's CSR memory (fork: CoW)."""
     global _G_INDPTR, _G_INDICES, _G_DATA, _G_NUM_NODES
     _G_INDPTR = indptr
@@ -20,7 +23,9 @@ def _init_worker(indptr, indices, data, num_nodes):
     _G_DATA = data
     _G_NUM_NODES = num_nodes
 
-def _worker_walks(args):
+def _worker_walks(
+    args: Tuple[Sequence[int], int, float, int, int, bool]
+) -> List[Dict[Tuple[int, int], float]]:
     """Worker: now reads neighbors directly from global CSR arrays."""
     nodes, num_walks, p_halt, max_walk_length, seed, show_progress = args
     rng = np.random.default_rng(seed)
@@ -52,7 +57,9 @@ def _worker_walks(args):
 
 
 class SparseRandomWalk:
-    def __init__(self, adjacency_matrix, seed=None):
+    """Sparse random-walk generator on CSR adjacency matrices."""
+
+    def __init__(self, adjacency_matrix: sp.spmatrix, seed: Optional[int] = None) -> None:
         self.adjacency = adjacency_matrix.tocsr()
         self.num_nodes = self.adjacency.shape[0]
         self.seed = seed or 42
@@ -62,7 +69,21 @@ class SparseRandomWalk:
         self.indices = self.adjacency.indices         # int32
         self.data = self.adjacency.data.astype(float, copy=False)
 
-    def get_random_walk_matrices(self, num_walks, p_halt, max_walk_length, use_tqdm=False, n_processes=None):
+    def get_random_walk_matrices(
+        self,
+        num_walks: int,
+        p_halt: float,
+        max_walk_length: int,
+        use_tqdm: bool = False,
+        n_processes: Optional[int] = None,
+    ) -> List[sp.csr_matrix]:
+        """
+        Perform multiple random walks from every node and collect per-step occupancy matrices.
+
+        Returns:
+            List of CSR matrices, one per step, where entry (i, j) counts expected visits to j
+            after ``step`` steps when starting from i (normalised by num_walks).
+        """
         if n_processes is None:
             n_processes = os.cpu_count()
 
